@@ -4,7 +4,7 @@ nome:"Rato",
 
 subtitulo:"BRASIL • PROGRAMADOR",
 
-avatar:"https://i.imgur.com/SEU_AVATAR.png",
+avatar:"https://cdn.discordapp.com/avatars/1231281182948196430/a_24a648641a482c61fc1deff747a9aedc.webp?animated=true&size=2048",
 
 video:"https://SEU_VIDEO.mp4",
 
