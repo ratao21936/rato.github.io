@@ -32,6 +32,7 @@
       --b: #f0ede6;
       --accent: #60A5FA;
       --accent-dim: rgba(96,165,250,0.18);
+      --spotify-green: #1DB954;
     }
 
     html { scroll-behavior: smooth; }
@@ -289,6 +290,7 @@
     .lnk.rb:hover { color: #e8e8e8; }
     .lnk.tt:hover { color: #ff2d55; }
     .lnk.gh:hover { color: #ffffff; }
+    .lnk.sp:hover { color: var(--spotify-green); }
 
     .friends-section {
       padding-top: 16px; margin-top: 4px;
@@ -332,14 +334,33 @@
       opacity: 1; transform: translateX(-50%) translateY(0);
     }
 
+    /* Spotify Embed */
+    .spotify-embed {
+      margin-top: 10px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .spotify-embed iframe {
+      width: 100%;
+      border-radius: 12px;
+      display: block;
+    }
+
+    /* Music Player (volume mínimo) */
     .player {
-      display: flex; flex-direction: column; gap: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
     .player-track {
-      display: flex; gap: 14px; align-items: center;
+      display: flex;
+      gap: 14px;
+      align-items: center;
     }
     .player-art {
-      width: 52px; height: 52px; border-radius: 8px;
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
       object-fit: cover;
       border: 1px solid var(--border);
       flex-shrink: 0;
@@ -351,46 +372,82 @@
     @keyframes vinylSpin {
       to { transform: rotate(360deg); border-radius: 50%; }
     }
-    .player-info { flex: 1; overflow: hidden; }
+    .player-info {
+      flex: 1;
+      overflow: hidden;
+    }
     .player-title {
-      font-family: var(--serif); font-style: italic;
-      font-size: 15px; color: var(--b); font-weight: 400;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 15px;
+      color: var(--b);
+      font-weight: 400;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       margin-bottom: 3px;
     }
     .player-artist {
-      font-size: 11px; color: var(--td); letter-spacing: 1px;
+      font-size: 11px;
+      color: var(--td);
+      letter-spacing: 1px;
       text-transform: uppercase;
     }
     .player-controls {
-      display: flex; align-items: center; gap: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
     .ctrl-btn {
-      background: var(--surface); border: 1px solid var(--border);
-      color: var(--t); padding: 8px 18px;
-      border-radius: 99px; cursor: pointer;
-      font-family: var(--mono); font-size: 11px; letter-spacing: 1px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--t);
+      padding: 8px 18px;
+      border-radius: 99px;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 1px;
       text-transform: uppercase;
       transition: background 0.2s, border-color 0.2s, color 0.2s;
     }
-    .ctrl-btn:hover { background: var(--surface-hover); border-color: var(--border-bright); color: var(--b); }
-    .ctrl-btn.primary {
-      background: var(--accent-dim); border-color: rgba(96,165,250,0.3); color: var(--accent);
+    .ctrl-btn:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-bright);
+      color: var(--b);
     }
-    .ctrl-btn.primary:hover { background: rgba(96,165,250,0.25); }
+    .ctrl-btn.primary {
+      background: var(--accent-dim);
+      border-color: rgba(96,165,250,0.3);
+      color: var(--accent);
+    }
+    .ctrl-btn.primary:hover {
+      background: rgba(96,165,250,0.25);
+    }
     .player-progress {
-      position: relative; height: 2px; background: var(--border); border-radius: 2px;
-      cursor: pointer; overflow: hidden;
+      position: relative;
+      height: 2px;
+      background: var(--border);
+      border-radius: 2px;
+      cursor: pointer;
+      overflow: hidden;
     }
     .player-progress-fill {
-      position: absolute; left: 0; top: 0; bottom: 0;
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
       background: linear-gradient(to right, var(--accent), rgba(96,165,250,0.5));
-      border-radius: 2px; width: 0%;
+      border-radius: 2px;
+      width: 0%;
       transition: width 0.3s linear;
     }
     .player-time {
-      display: flex; justify-content: space-between;
-      font-size: 10px; color: var(--td); letter-spacing: 0.5px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--td);
+      letter-spacing: 0.5px;
       margin-top: 5px;
     }
 
@@ -437,8 +494,8 @@
   <div class="reveal">
     <div class="profile">
       <div class="banner-container">
-        <div class="profile-banner" id="banner-container">
-          <img id="banner-img" src="" alt="banner" style="width:100%; height:100%; object-fit:cover;">
+        <div class="profile-banner">
+          <img id="banner-img" src="https://images-ext-1.discordapp.net/external/4oiXwl198-zYBDWirjP9L5s8XneTvbg5rYovXfvkJxQ/%3Fanimated%3Dtrue%26size%3D512/https/cdn.discordapp.com/banners/1231281182948196430/a_23419ffa601f82e4f7475d34a79d9cbb.webp?animated=true&width=300&height=106" alt="banner" style="width:100%; height:100%; object-fit:cover;">
         </div>
         <div class="avatar-wrapper">
           <div class="avatar-wrap">
@@ -516,8 +573,17 @@
     </div>
   </div>
 
+  <!-- Spotify Playlist Embed -->
+  <div class="card reveal" style="transition-delay:.15s">
+    <div class="section-label">Spotify</div>
+    <div class="spotify-embed">
+      <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0" width="100%" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <!-- Music Player (volume no mínimo) -->
   <div class="card reveal" style="transition-delay:.18s">
-    <div class="section-label">Música</div>
+    <div class="section-label">Player Alternativo</div>
     <div class="player">
       <div class="player-track">
         <img id="player-art" class="player-art" src="https://files.catbox.moe/n7ydyi.jpg" alt="Album art">
@@ -553,6 +619,7 @@
 <script>
 (function () {
   const DISCORD_USER_ID = "1231281182948196430";
+  const BANNER_FIXO = "https://images-ext-1.discordapp.net/external/4oiXwl198-zYBDWirjP9L5s8XneTvbg5rYovXfvkJxQ/%3Fanimated%3Dtrue%26size%3D512/https/cdn.discordapp.com/banners/1231281182948196430/a_23419ffa601f82e4f7475d34a79d9cbb.webp?animated=true&width=300&height=106";
   
   const gate = document.getElementById('gate');
   const wrap = document.getElementById('wrap');
@@ -630,65 +697,39 @@
     console.warn("Firebase error:", e);
   }
 
-  /* ── Buscar dados do Discord (CORRIGIDO) ── */
+  /* Buscar dados do Discord (avatar, status, nome) */
   function fetchDiscordData() {
     fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`)
       .then(r => r.json())
       .then(response => {
         if (!response?.success || !response?.data) return;
         
-        // Os dados do usuário estão em discord_user
         const userData = response.data.discord_user;
         const status = response.data.discord_status;
         
         if (!userData) return;
         
-        // 1. Avatar
+        // Avatar
         const avatarImg = document.getElementById('profile-avatar');
         if (avatarImg && userData.avatar) {
           const isGif = userData.avatar.startsWith('a_');
           const avatarUrl = `https://cdn.discordapp.com/avatars/${DISCORD_USER_ID}/${userData.avatar}.${isGif ? 'gif' : 'webp'}?size=256`;
           avatarImg.src = avatarUrl;
           
-          // Favicon
           const faviconLink = document.getElementById('dynamic-favicon');
           const shortcutLink = document.getElementById('dynamic-shortcut');
           if (faviconLink) faviconLink.href = avatarUrl;
           if (shortcutLink) shortcutLink.href = avatarUrl;
         }
         
-        const bannerImg = document.getElementById('banner-img');
-if (bannerImg && response.data.banner) {
-  // Detecta se é GIF animado (começa com 'a_')
-  const isGif = response.data.banner.startsWith('a_');
-  const bannerUrl = `https://cdn.discordapp.com/banners/${DISCORD_USER_ID}/${response.data.banner}.${isGif ? 'gif' : 'webp'}?size=300`;
-  bannerImg.src = bannerUrl;
-  bannerImg.style.display = 'block';
-  console.log("Banner carregado:", bannerUrl); // Para debug
-} else if (bannerImg && response.data.banner_color) {
-  // Se não tem banner, usa a cor do banner
-  bannerImg.style.display = 'none';
-  const bannerContainer = document.getElementById('banner-container');
-  if (bannerContainer) {
-    bannerContainer.style.background = response.data.banner_color;
-  }
-} else {
-  // Fallback: gradiente padrão
-  bannerImg.style.display = 'none';
-  const bannerContainer = document.getElementById('banner-container');
-  if (bannerContainer) {
-    bannerContainer.style.background = 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)';
-  }
-}
-        
-        // 3. Status (agora vai funcionar!)
+        // Status
         const dot = document.getElementById('discord-dot');
         if (dot && status) {
           const colors = { online:'#43b581', dnd:'#f04747', idle:'#faa61a', offline:'#747f8d' };
           dot.style.background = colors[status] || '#747f8d';
         }
         
-        // 4. Nome
+        // Nome
         const nameEl = document.getElementById('profile-name');
         if (nameEl) {
           if (userData.global_name) {
@@ -698,14 +739,11 @@ if (bannerImg && response.data.banner) {
           }
         }
         
-        // 5. Título da aba
         if (userData.global_name) {
           document.title = `${userData.global_name} | Bio`;
         } else if (userData.username) {
           document.title = `${userData.username} | Bio`;
         }
-        
-        console.log("Dados carregados:", userData.global_name, "Status:", status);
       })
       .catch(err => console.warn("Lanyard API error:", err));
   }
@@ -713,7 +751,7 @@ if (bannerImg && response.data.banner) {
   fetchDiscordData();
   setInterval(fetchDiscordData, 30000);
 
-  /* Music Player */
+  /* Music Player com volume MÍNIMO */
   const tracks = [
     { name: '505',    artist: 'Radiohead', url: 'https://files.catbox.moe/nfa0w7.mp3', art: 'https://files.catbox.moe/n7ydyi.jpg' },
     { name: 'Creep',  artist: 'Radiohead', url: 'https://files.catbox.moe/9njzq4.mp3', art: 'https://files.catbox.moe/az6ony.jpg' },
@@ -722,7 +760,7 @@ if (bannerImg && response.data.banner) {
 
   let cur = 0, playing = false;
   const audio = new Audio();
-  audio.volume = 0.1;
+  audio.volume = 0.03; // Volume MÍNIMO (3%)
   
   const playBtn  = document.getElementById('play-btn');
   const nextBtn  = document.getElementById('next-btn');
