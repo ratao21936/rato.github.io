@@ -115,20 +115,11 @@
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
-    .gate-symbol {
-      font-family: var(--serif);
-      font-size: 80px;
-      font-weight: 400;
-      font-style: italic;
-      color: var(--accent);
-      animation: breathe 3.5s ease-in-out infinite;
-      cursor: pointer;
-      pointer-events: auto;
-    }
     .gate-symbol img {
       width: 80px;
       height: 80px;
       filter: drop-shadow(0 0 10px rgba(96,165,250,0.5));
+      animation: breathe 3.5s ease-in-out infinite;
     }
     .gate-hint {
       font-family: var(--mono);
@@ -309,12 +300,27 @@
     .card:hover { border-color: var(--border-bright); }
 
     .section-label {
-      font-size: 9px; letter-spacing: 3.5px; text-transform: uppercase;
-      color: var(--accent); font-weight: 500;
-      margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+      font-size: 9px;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    /* Corrigindo o tamanho dos emojis dentro do section-label */
+    .section-label img {
+      width: 16px;
+      height: 16px;
+      vertical-align: middle;
+      display: inline-block;
     }
     .section-label::after {
-      content: ''; flex: 1; height: 1px;
+      content: '';
+      flex: 1;
+      height: 1px;
       background: linear-gradient(to right, var(--border-bright), transparent);
     }
 
@@ -533,6 +539,37 @@
       margin-top: 5px;
     }
 
+    /* Spotify Profile Link */
+    .spotify-profile {
+      margin-top: 15px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+    }
+    .spotify-profile-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(29,185,84,0.1);
+      padding: 8px 16px;
+      border-radius: 99px;
+      text-decoration: none;
+      color: var(--spotify-green);
+      font-size: 12px;
+      letter-spacing: 1px;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(29,185,84,0.3);
+    }
+    .spotify-profile-link:hover {
+      background: rgba(29,185,84,0.2);
+      transform: scale(1.02);
+    }
+    .spotify-profile-link img {
+      width: 18px;
+      height: 18px;
+    }
+
     .foot {
       text-align: center;
       font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
@@ -664,7 +701,7 @@
   </div>
 
   <div class="card reveal" style="transition-delay:.18s">
-    <div class="section-label"><img src=https://cdn.discordapp.com/emojis/1513038422367797269.png alt=Spotify> Player</div>
+    <div class="section-label"><img src="https://cdn.discordapp.com/emojis/1513038422367797269.png" alt="Spotify"> Player</div>
     <div class="player">
       <div class="player-track">
         <img id="player-art" class="player-art" src="https://files.catbox.moe/n7ydyi.jpg" alt="Album art">
@@ -690,9 +727,18 @@
   </div>
 
   <div class="card reveal" style="transition-delay:.21s">
-    <div class="section-label"><img src=https://cdn.discordapp.com/emojis/1513038422367797269.png alt=Spotify> Spotify Playlist</div>
+    <div class="section-label"><img src="https://cdn.discordapp.com/emojis/1513038422367797269.png" alt="Spotify"> Spotify Playlist</div>
     <div class="spotify-embed">
       <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1E8Q1Zs7959UmL?utm_source=generator&theme=0" width="100%" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+    
+    <!-- Meu perfil do Spotify -->
+    <div class="spotify-profile">
+      <a href="https://open.spotify.com/user/31j2fkrmrvfsnolxfnntwxxutbge" target="_blank" class="spotify-profile-link">
+        <img src="https://cdn.discordapp.com/emojis/1513038422367797269.png" alt="Spotify">
+        Meu Perfil no Spotify
+        <span>↗</span>
+      </a>
     </div>
   </div>
 
@@ -830,12 +876,10 @@
         const status = response.data.discord_status;
         const activities = response.data.activities || [];
         
-        // Custom Status
         const customStatus = activities.find(a => a.type === 4);
         
         if (!userData) return;
         
-        // Avatar
         const avatarImg = document.getElementById('profile-avatar');
         if (avatarImg && userData.avatar) {
           const isGif = userData.avatar.startsWith('a_');
@@ -843,14 +887,12 @@
           avatarImg.src = avatarUrl;
         }
         
-        // Status
         const dot = document.getElementById('discord-dot');
         if (dot && status) {
           const colors = { online:'#43b581', dnd:'#f04747', idle:'#faa61a', offline:'#747f8d' };
           dot.style.background = colors[status] || '#747f8d';
         }
         
-        // Nome
         const nameEl = document.getElementById('profile-name');
         if (nameEl) {
           if (userData.global_name) {
@@ -866,7 +908,6 @@
           document.title = `${userData.username} | Bio`;
         }
         
-        // O que estou pensando (Custom Status)
         const thinkingTextEl = document.getElementById('thinking-text');
         if (thinkingTextEl) {
           if (customStatus && customStatus.state) {
