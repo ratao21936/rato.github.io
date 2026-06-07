@@ -7,6 +7,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  
+  <!-- Favicon dinâmico (vai ser atualizado pela API) -->
+  <link rel="icon" type="image/png" href="" id="dynamic-favicon">
+  <link rel="shortcut icon" href="" id="dynamic-shortcut">
+  
   <style>
     *, *::before, *::after {
       margin: 0; padding: 0;
@@ -194,6 +199,7 @@
       object-position: center top;
       border: 2px solid var(--bg);
       filter: grayscale(0.2);
+      transition: opacity 0.3s ease;
     }
     .avatar-ring-deco {
       position: absolute;
@@ -452,19 +458,19 @@
   <div class="reveal">
     <div class="profile">
       <div class="banner-container">
-        <div class="profile-banner">
-          <img src="https://images-ext-1.discordapp.net/external/4oiXwl198-zYBDWirjP9L5s8XneTvbg5rYovXfvkJxQ/%3Fanimated%3Dtrue%26size%3D512/https/cdn.discordapp.com/banners/1231281182948196430/a_23419ffa601f82e4f7475d34a79d9cbb.webp?animated=true&width=300&height=106" alt="banner" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)'">
+        <div class="profile-banner" id="banner-container">
+          <img id="banner-img" src="" alt="banner" style="width:100%; height:100%; object-fit:cover;">
         </div>
         <div class="avatar-wrapper">
           <div class="avatar-wrap">
             <div class="avatar-ring-deco"></div>
-            <img src="https://images-ext-1.discordapp.net/external/zHh2YzmN8WLdzhced1Ekbp2HbyZKvmkgJynQ_GwOedc/%3Fanimated%3Dtrue%26size%3D2048/https/cdn.discordapp.com/avatars/1231281182948196430/a_24a648641a482c61fc1deff747a9aedc.webp?animated=true&width=256&height=256" alt="Rato" class="avatar" id="profile-avatar">
+            <img src="" alt="Rato" class="avatar" id="profile-avatar">
             <div class="status-dot" id="discord-dot"></div>
           </div>
         </div>
       </div>
-      <div class="profile-name">Rato</div>
-      <div class="profile-sub">Brasil • Programador</div>
+      <div class="profile-name" id="profile-name">Rato</div>
+      <div class="profile-sub" id="profile-sub">Brasil • Programador</div>
     </div>
   </div>
 
@@ -571,12 +577,13 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
 (function () {
+  const DISCORD_USER_ID = "1231281182948196430";
+  
   /* ── FIX: GATE CLICK (PC + MOBILE) ── */
   const gate = document.getElementById('gate');
   const wrap = document.getElementById('wrap');
   const bgVideo = document.getElementById('bg-video');
   
-  // Função para abrir o site (remover gate)
   function openSite() {
     if (!gate) return;
     gate.classList.add('out');
@@ -589,7 +596,6 @@
         bgVideo.muted = false; 
         bgVideo.play().catch(()=>{}); 
       }
-      // Ativar reveal após gate sumir
       const obs = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (e.isIntersecting) {
@@ -604,7 +610,6 @@
     }, { once: true });
   }
 
-  // Eventos para PC e Mobile
   if (gate) {
     gate.addEventListener('click', openSite);
     gate.addEventListener('touchstart', function(e) {
@@ -615,7 +620,6 @@
     gate.style.cursor = 'pointer';
   }
 
-  // Iniciar vídeo muted (autoplay permitido)
   if (bgVideo) { 
     bgVideo.load(); 
     bgVideo.muted = true; 
@@ -634,13 +638,11 @@
       measurementId: "G-REJ4J8B2RP"
     };
     
-    // Verificar se o Firebase já foi inicializado
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
     
-    const db = firebase.database();
-    const ref = db.ref('contador');
+    const ref = firebase.database().ref('contador');
     
     if (!localStorage.getItem('view')) {
       ref.transaction(c => (c || 0) + 1);
@@ -654,19 +656,76 @@
     console.warn("Firebase error:", e);
   }
 
-  /* ── Discord status (seu próprio ID) ── */
-  function fetchStatus() {
-    fetch('https://api.lanyard.rest/v1/users/1231281182948196430')
-      .then(r => r.json()).then(data => {
+  /* ── Função para buscar dados do Discord (avatar, banner, status, username) ── */
+  function fetchDiscordData() {
+    fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`)
+      .then(r => r.json())
+      .then(data => {
+        if (!data?.data) return;
+        
+        const userData = data.data;
+        
+        // 1. Atualizar AVATAR
+        const avatarImg = document.getElementById('profile-avatar');
+        if (avatarImg && userData.avatar) {
+          const isGif = userData.avatar.startsWith('a_');
+          const avatarUrl = `https://cdn.discordapp.com/avatars/${DISCORD_USER_ID}/${userData.avatar}.${isGif ? 'gif' : 'webp'}?size=256`;
+          avatarImg.src = avatarUrl;
+          
+          // Atualizar favicon também
+          const faviconLink = document.getElementById('dynamic-favicon');
+          const shortcutLink = document.getElementById('dynamic-shortcut');
+          if (faviconLink) faviconLink.href = avatarUrl;
+          if (shortcutLink) shortcutLink.href = avatarUrl;
+        }
+        
+        // 2. Atualizar BANNER
+        const bannerImg = document.getElementById('banner-img');
+        if (bannerImg && userData.banner) {
+          const isGif = userData.banner.startsWith('a_');
+          const bannerUrl = `https://cdn.discordapp.com/banners/${DISCORD_USER_ID}/${userData.banner}.${isGif ? 'gif' : 'webp'}?size=300`;
+          bannerImg.src = bannerUrl;
+          bannerImg.style.display = 'block';
+        } else if (bannerImg && userData.banner_color) {
+          // Se não tem banner, usa a cor do banner
+          bannerImg.style.display = 'none';
+          const bannerContainer = document.getElementById('banner-container');
+          if (bannerContainer) {
+            bannerContainer.style.background = userData.banner_color;
+          }
+        }
+        
+        // 3. Atualizar STATUS (online/dnd/idle/offline)
         const dot = document.getElementById('discord-dot');
-        if (!dot || !data?.data) return;
-        const colors = { online:'#43b581', dnd:'#f04747', idle:'#faa61a', offline:'#747f8d' };
-        dot.style.background = colors[data.data.discord_status] || '#747f8d';
-      }).catch(()=>{});
+        if (dot && userData.discord_status) {
+          const colors = { online:'#43b581', dnd:'#f04747', idle:'#faa61a', offline:'#747f8d' };
+          dot.style.background = colors[userData.discord_status] || '#747f8d';
+        }
+        
+        // 4. Atualizar NOME e TAG (se disponível)
+        const nameEl = document.getElementById('profile-name');
+        if (nameEl && userData.global_name) {
+          nameEl.textContent = userData.global_name;
+        } else if (nameEl && userData.username) {
+          nameEl.textContent = userData.username;
+        }
+        
+        // 5. Atualizar título da aba
+        if (userData.global_name) {
+          document.title = `${userData.global_name} | Bio`;
+        } else if (userData.username) {
+          document.title = `${userData.username} | Bio`;
+        }
+      })
+      .catch(err => console.warn("Lanyard API error:", err));
   }
-  fetchStatus(); setInterval(fetchStatus, 30000);
+  
+  // Buscar dados do Discord ao carregar
+  fetchDiscordData();
+  // Atualizar a cada 30 segundos
+  setInterval(fetchDiscordData, 30000);
 
-  /* ── Music player com VOLUME MAIS BAIXO ── */
+  /* ── Music player com VOLUME BAIXO ── */
   const tracks = [
     { name: '505',    artist: 'Radiohead', url: 'https://files.catbox.moe/nfa0w7.mp3', art: 'https://files.catbox.moe/n7ydyi.jpg' },
     { name: 'Creep',  artist: 'Radiohead', url: 'https://files.catbox.moe/9njzq4.mp3', art: 'https://files.catbox.moe/az6ony.jpg' },
@@ -675,8 +734,6 @@
 
   let cur = 0, playing = false;
   const audio = new Audio();
-  
-  // 🔊 VOLUME MAIS BAIXO (30% do volume máximo)
   audio.volume = 0.1;
   
   const playBtn  = document.getElementById('play-btn');
