@@ -65,25 +65,41 @@
 
     /* ── GATE ── */
     .gate {
-      position: fixed; inset: 0; z-index: 500;
-      background: #000;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 20px; cursor: pointer;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #000000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      cursor: pointer;
+      pointer-events: auto;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
     .gate-symbol {
       font-family: var(--serif);
-      font-size: 64px; font-weight: 400; font-style: italic;
+      font-size: 64px;
+      font-weight: 400;
+      font-style: italic;
       color: var(--accent);
       animation: breathe 3.5s ease-in-out infinite;
       letter-spacing: -2px;
+      cursor: pointer;
+      pointer-events: auto;
     }
     .gate-hint {
       font-family: var(--mono);
-      font-size: 10px; letter-spacing: 4px;
-      text-transform: uppercase; color: var(--td);
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--td);
       animation: breathe 3.5s ease-in-out infinite;
       animation-delay: 0.3s;
+      cursor: pointer;
+      pointer-events: auto;
     }
     @keyframes breathe {
       0%,100% { opacity: 0.3; transform: scale(0.97); }
@@ -93,7 +109,7 @@
       animation: gateOut 0.9s cubic-bezier(0.76,0,0.24,1) forwards;
     }
     @keyframes gateOut {
-      to { opacity: 0; transform: scale(1.06); pointer-events: none; }
+      to { opacity: 0; transform: scale(1.06); visibility: hidden; pointer-events: none; }
     }
 
     /* ── TOPBAR ── */
@@ -431,8 +447,7 @@
 </div>
 
 <!-- Main content -->
-<div class="wrap" id="wrap">
-
+<div class="wrap" id="wrap" style="visibility: hidden;">
   <!-- Profile com Banner (Discord style) -->
   <div class="reveal">
     <div class="profile">
@@ -558,13 +573,65 @@
     <span>Feito por Rato</span>
     <span id="last-updated"></span>
   </div>
-
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
 (function () {
+  /* ── FIX: GATE CLICK (PC + MOBILE) ── */
+  const gate = document.getElementById('gate');
+  const wrap = document.getElementById('wrap');
+  const bgVideo = document.getElementById('bg-video');
+  
+  // Função para abrir o site (remover gate)
+  function openSite() {
+    if (!gate) return;
+    gate.classList.add('out');
+    gate.addEventListener('animationend', function onEnd() {
+      gate.style.display = 'none';
+      gate.style.visibility = 'hidden';
+      gate.style.pointerEvents = 'none';
+      if (wrap) wrap.style.visibility = 'visible';
+      if (bgVideo) { 
+        bgVideo.muted = false; 
+        bgVideo.play().catch(()=>{}); 
+      }
+      // Ativar reveal após gate sumir
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            const delay = parseFloat(e.target.style.transitionDelay || '0') * 1000;
+            setTimeout(() => e.target.classList.add('in'), delay);
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.08 });
+      document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+      gate.removeEventListener('animationend', onEnd);
+    }, { once: true });
+  }
+
+  // Eventos para PC e Mobile
+  if (gate) {
+    // Clique padrão para PC e touch para mobile
+    gate.addEventListener('click', openSite);
+    gate.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      openSite();
+    }, { passive: false });
+    // Garantir que qualquer toque na tela inteira funcione
+    gate.style.cursor = 'pointer';
+  }
+
+  // Iniciar vídeo muted (autoplay permitido)
+  if (bgVideo) { 
+    bgVideo.load(); 
+    bgVideo.muted = true; 
+    bgVideo.play().catch(()=>{}); 
+  }
+
   /* ── Firebase views ── */
   try {
     firebase.initializeApp({
@@ -576,4 +643,135 @@
       messagingSenderId: "1001916178195",
       appId: "1:1001916178195:web:2073662d4593ceace684e6"
     });
+    const ref = firebase.database().ref('contador');
+    if (!localStorage.getItem('view')) {
+      ref.transaction(c => (c || 0) + 1);
+      localStorage.setItem('view', 'true');
+    }
+    ref.on('value', snap => {
+      const el = document.getElementById('view-count');
+      if (el) { let v = snap.val() || 0; el.textContent = v >= 1000 ? (v/1000).toFixed(1)+'k' : v; }
+    });
+  } catch(e) {}
+
+  /* ── Discord status (User ID mantido) ── */
+  function fetchStatus() {
+    fetch('https://api.lanyard.rest/v1/users/1483604270317174844')
+      .then(r => r.json()).then(data => {
+        const dot = document.getElementById('discord-dot');
+        if (!dot || !data?.data) return;
+        const colors = { online:'#43b581', dnd:'#f04747', idle:'#faa61a', offline:'#747f8d' };
+        dot.style.background = colors[data.data.discord_status] || '#747f8d';
+      }).catch(()=>{});
+  }
+  fetchStatus(); setInterval(fetchStatus, 30000);
+
+  /* ── Music player (mantido original) ── */
+  const tracks = [
+    { name: '505',    artist: 'Radiohead', url: 'https://files.catbox.moe/nfa0w7.mp3', art: 'https://files.catbox.moe/n7ydyi.jpg' },
+    { name: 'Creep',  artist: 'Radiohead', url: 'https://files.catbox.moe/9njzq4.mp3', art: 'https://files.catbox.moe/az6ony.jpg' },
+    { name: 'Unhappy',artist: 'S0rrow',   url: 'https://files.catbox.moe/5hll5l.mp3', art: 'https://files.catbox.moe/02400j.webp' }
+  ];
+
+  let cur = 0, playing = false;
+  const audio = new Audio();
+  const playBtn  = document.getElementById('play-btn');
+  const nextBtn  = document.getElementById('next-btn');
+  const artImg   = document.getElementById('player-art');
+  const titleEl  = document.getElementById('player-title');
+  const artistEl = document.getElementById('player-artist');
+  const progFill = document.getElementById('progress-fill');
+  const timeCur  = document.getElementById('time-cur');
+  const timeTot  = document.getElementById('time-tot');
+  const progBar  = document.getElementById('progress-bar');
+
+  function fmt(s) {
+    const m = Math.floor(s/60), sec = Math.floor(s%60);
+    return m+':'+(sec<10?'0':'')+sec;
+  }
+
+  function loadTrack(i, autoplay) {
+    cur = ((i % tracks.length) + tracks.length) % tracks.length;
+    const t = tracks[cur];
+    audio.src = t.url;
+    artImg.style.opacity = '0';
+    artImg.style.transition = 'opacity 0.3s';
+    setTimeout(() => {
+      artImg.src = t.art;
+      artImg.onload = () => { artImg.style.opacity = '1'; };
+      setTimeout(() => { artImg.style.opacity = '1'; }, 200);
+    }, 150);
+    titleEl.textContent = t.name;
+    artistEl.textContent = t.artist;
+    progFill.style.width = '0%';
+    timeCur.textContent = '0:00';
+    timeTot.textContent = '0:00';
+    artImg.classList.remove('spinning');
+    audio.load();
+    if (autoplay) {
+      audio.play().then(() => {
+        playing = true; playBtn.textContent = 'Pause';
+        artImg.classList.add('spinning');
+        if (bgVideo) bgVideo.pause();
+      }).catch(()=>{});
+    }
+  }
+
+  function togglePlay() {
+    if (playing) {
+      audio.pause(); playing = false;
+      playBtn.textContent = 'Play';
+      artImg.classList.remove('spinning');
+      if (bgVideo) bgVideo.play().catch(()=>{});
+    } else {
+      audio.play().then(() => {
+        playing = true; playBtn.textContent = 'Pause';
+        artImg.classList.add('spinning');
+        if (bgVideo) bgVideo.pause();
+      }).catch(()=>{});
+    }
+  }
+
+  audio.addEventListener('timeupdate', () => {
+    if (!audio.duration) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
+    progFill.style.width = pct + '%';
+    timeCur.textContent = fmt(audio.currentTime);
+    timeTot.textContent = fmt(audio.duration);
+  });
+
+  audio.addEventListener('ended', () => loadTrack(cur + 1, true));
+
+  if (progBar) {
+    progBar.addEventListener('click', e => {
+      if (!audio.duration) return;
+      const rect = progBar.getBoundingClientRect();
+      audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+    });
+  }
+
+  if (playBtn) playBtn.addEventListener('click', togglePlay);
+  if (nextBtn) nextBtn.addEventListener('click', () => loadTrack(cur + 1, playing));
+  loadTrack(0, false);
+
+  /* ── Footer date ── */
+  const lu = document.getElementById('last-updated');
+  if (lu) {
+    const d = new Date(document.lastModified);
+    const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    lu.textContent = 'atualizado em ' + months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+  }
+
+  /* ── Touch friends ── */
+  document.querySelectorAll('.friend').forEach(el => {
+    el.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      this.classList.add('touched');
+      setTimeout(() => this.classList.remove('touched'), 300);
+    }, { passive: false });
+  });
+})();
+</script>
+</body>
+</html>
     const ref = f
