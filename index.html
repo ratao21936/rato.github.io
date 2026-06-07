@@ -657,20 +657,29 @@
           if (shortcutLink) shortcutLink.href = avatarUrl;
         }
         
-        // 2. Banner
         const bannerImg = document.getElementById('banner-img');
-        if (bannerImg && response.data.banner) {
-          const isGif = response.data.banner.startsWith('a_');
-          const bannerUrl = `https://cdn.discordapp.com/banners/${DISCORD_USER_ID}/${response.data.banner}.${isGif ? 'gif' : 'webp'}?size=300`;
-          bannerImg.src = bannerUrl;
-          bannerImg.style.display = 'block';
-        } else if (bannerImg && response.data.banner_color) {
-          bannerImg.style.display = 'none';
-          const bannerContainer = document.getElementById('banner-container');
-          if (bannerContainer) {
-            bannerContainer.style.background = response.data.banner_color;
-          }
-        }
+if (bannerImg && response.data.banner) {
+  // Detecta se é GIF animado (começa com 'a_')
+  const isGif = response.data.banner.startsWith('a_');
+  const bannerUrl = `https://cdn.discordapp.com/banners/${DISCORD_USER_ID}/${response.data.banner}.${isGif ? 'gif' : 'webp'}?size=300`;
+  bannerImg.src = bannerUrl;
+  bannerImg.style.display = 'block';
+  console.log("Banner carregado:", bannerUrl); // Para debug
+} else if (bannerImg && response.data.banner_color) {
+  // Se não tem banner, usa a cor do banner
+  bannerImg.style.display = 'none';
+  const bannerContainer = document.getElementById('banner-container');
+  if (bannerContainer) {
+    bannerContainer.style.background = response.data.banner_color;
+  }
+} else {
+  // Fallback: gradiente padrão
+  bannerImg.style.display = 'none';
+  const bannerContainer = document.getElementById('banner-container');
+  if (bannerContainer) {
+    bannerContainer.style.background = 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)';
+  }
+}
         
         // 3. Status (agora vai funcionar!)
         const dot = document.getElementById('discord-dot');
