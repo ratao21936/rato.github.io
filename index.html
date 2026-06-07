@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
   
-  <!-- Favicon dinâmico (vai ser atualizado pela API) -->
+  <!-- Favicon dinâmico -->
   <link rel="icon" type="image/png" href="" id="dynamic-favicon">
   <link rel="shortcut icon" href="" id="dynamic-shortcut">
   
@@ -44,7 +44,6 @@
       overflow-x: hidden;
     }
 
-    /* ── VIDEO BG ── */
     .video-bg {
       position: fixed; inset: 0; z-index: -2; overflow: hidden;
     }
@@ -60,7 +59,6 @@
         linear-gradient(to bottom, rgba(2,6,23,0.4) 0%, rgba(15,23,42,0.7) 100%);
     }
 
-    /* ── GRAIN ── */
     .grain {
       position: fixed; inset: 0; z-index: -1; pointer-events: none;
       opacity: 0.05;
@@ -68,7 +66,6 @@
       background-size: 200px 200px;
     }
 
-    /* ── GATE ── */
     .gate {
       position: fixed;
       inset: 0;
@@ -117,7 +114,6 @@
       to { opacity: 0; transform: scale(1.06); visibility: hidden; pointer-events: none; }
     }
 
-    /* ── TOPBAR ── */
     .topbar {
       position: fixed; top: 16px; left: 0; right: 0;
       display: flex; justify-content: space-between; align-items: center;
@@ -135,28 +131,24 @@
       pointer-events: auto;
     }
 
-    /* ── LAYOUT ── */
     .wrap {
       max-width: 440px; margin: 0 auto;
       padding: 72px 18px 80px;
       display: flex; flex-direction: column; gap: 10px;
     }
 
-    /* ── REVEAL ── */
     .reveal {
       opacity: 0; transform: translateY(24px);
       transition: opacity 0.7s ease, transform 0.7s ease;
     }
     .reveal.in { opacity: 1; transform: translateY(0); }
 
-    /* ── PROFILE (COM BANNER) ── */
     .profile {
       display: flex; flex-direction: column;
       gap: 12px; text-align: center;
       position: relative;
     }
     
-    /* Banner container */
     .banner-container {
       position: relative;
       width: 100%;
@@ -233,7 +225,6 @@
       color: var(--td); margin-top: -4px;
     }
 
-    /* ── CARD ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -255,7 +246,6 @@
       background: linear-gradient(to right, var(--border-bright), transparent);
     }
 
-    /* ── ABOUT ── */
     .tagline {
       font-family: var(--serif);
       font-size: 15px; font-style: italic; font-weight: 400;
@@ -273,7 +263,6 @@
       padding: 4px 11px; border-radius: 99px;
     }
 
-    /* ── LINKS ── */
     .lnk {
       display: flex; align-items: center; gap: 14px;
       padding: 12px 4px;
@@ -301,7 +290,6 @@
     .lnk.tt:hover { color: #ff2d55; }
     .lnk.gh:hover { color: #ffffff; }
 
-    /* ── FRIENDS ── */
     .friends-section {
       padding-top: 16px; margin-top: 4px;
       border-top: 1px solid var(--border);
@@ -344,7 +332,6 @@
       opacity: 1; transform: translateX(-50%) translateY(0);
     }
 
-    /* ── MUSIC PLAYER ── */
     .player {
       display: flex; flex-direction: column; gap: 14px;
     }
@@ -407,7 +394,6 @@
       margin-top: 5px;
     }
 
-    /* ── FOOTER ── */
     .foot {
       text-align: center;
       font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
@@ -417,7 +403,6 @@
     .foot a { color: var(--td); text-decoration: none; }
     .foot a:hover { color: var(--accent); }
 
-    /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 99px; }
@@ -425,23 +410,19 @@
 </head>
 <body>
 
-<!-- Grain overlay -->
 <div class="grain"></div>
 
-<!-- Video background -->
 <div class="video-bg">
   <video id="bg-video" loop playsinline preload="auto" muted>
     <source src="https://files.catbox.moe/3xm2ia.mp4" type="video/mp4">
   </video>
 </div>
 
-<!-- Gate screen -->
 <div class="gate" id="gate">
   <div class="gate-symbol">☕︎</div>
   <div class="gate-hint">Click</div>
 </div>
 
-<!-- Topbar -->
 <div class="topbar">
   <div class="views">
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -452,9 +433,7 @@
   </div>
 </div>
 
-<!-- Main content -->
 <div class="wrap" id="wrap" style="visibility: hidden;">
-  <!-- Profile com Banner (Discord style) -->
   <div class="reveal">
     <div class="profile">
       <div class="banner-container">
@@ -474,7 +453,6 @@
     </div>
   </div>
 
-  <!-- About -->
   <div class="card reveal" style="transition-delay:.06s">
     <div class="section-label">Sobre</div>
     <p class="tagline">"Um pai pode partir, mas sua história continua viva."</p>
@@ -485,7 +463,6 @@
     </div>
   </div>
 
-  <!-- Links + Friends -->
   <div class="card reveal" style="transition-delay:.12s">
     <div class="section-label">Links</div>
     <div>
@@ -539,7 +516,6 @@
     </div>
   </div>
 
-  <!-- Music Player -->
   <div class="card reveal" style="transition-delay:.18s">
     <div class="section-label">Música</div>
     <div class="player">
@@ -566,7 +542,6 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <div class="foot reveal" style="transition-delay:.24s">
     <span>Feito por Rato</span>
     <span id="last-updated"></span>
@@ -579,7 +554,6 @@
 (function () {
   const DISCORD_USER_ID = "1231281182948196430";
   
-  /* ── FIX: GATE CLICK (PC + MOBILE) ── */
   const gate = document.getElementById('gate');
   const wrap = document.getElementById('wrap');
   const bgVideo = document.getElementById('bg-video');
@@ -626,7 +600,7 @@
     bgVideo.play().catch(()=>{}); 
   }
 
-  /* ── Firebase views com SEU banco de dados ── */
+  /* Firebase */
   try {
     const firebaseConfig = {
       apiKey: "AIzaSyAbctCi7FEjZqDxJxiW7Ru4ddi396dtmZ0",
@@ -656,76 +630,81 @@
     console.warn("Firebase error:", e);
   }
 
-  /* ── Função para buscar dados do Discord (avatar, banner, status, username) ── */
+  /* ── Buscar dados do Discord (CORRIGIDO) ── */
   function fetchDiscordData() {
     fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`)
       .then(r => r.json())
-      .then(data => {
-        if (!data?.data) return;
+      .then(response => {
+        if (!response?.success || !response?.data) return;
         
-        const userData = data.data;
+        // Os dados do usuário estão em discord_user
+        const userData = response.data.discord_user;
+        const status = response.data.discord_status;
         
-        // 1. Atualizar AVATAR
+        if (!userData) return;
+        
+        // 1. Avatar
         const avatarImg = document.getElementById('profile-avatar');
         if (avatarImg && userData.avatar) {
           const isGif = userData.avatar.startsWith('a_');
           const avatarUrl = `https://cdn.discordapp.com/avatars/${DISCORD_USER_ID}/${userData.avatar}.${isGif ? 'gif' : 'webp'}?size=256`;
           avatarImg.src = avatarUrl;
           
-          // Atualizar favicon também
+          // Favicon
           const faviconLink = document.getElementById('dynamic-favicon');
           const shortcutLink = document.getElementById('dynamic-shortcut');
           if (faviconLink) faviconLink.href = avatarUrl;
           if (shortcutLink) shortcutLink.href = avatarUrl;
         }
         
-        // 2. Atualizar BANNER
+        // 2. Banner
         const bannerImg = document.getElementById('banner-img');
-        if (bannerImg && userData.banner) {
-          const isGif = userData.banner.startsWith('a_');
-          const bannerUrl = `https://cdn.discordapp.com/banners/${DISCORD_USER_ID}/${userData.banner}.${isGif ? 'gif' : 'webp'}?size=300`;
+        if (bannerImg && response.data.banner) {
+          const isGif = response.data.banner.startsWith('a_');
+          const bannerUrl = `https://cdn.discordapp.com/banners/${DISCORD_USER_ID}/${response.data.banner}.${isGif ? 'gif' : 'webp'}?size=300`;
           bannerImg.src = bannerUrl;
           bannerImg.style.display = 'block';
-        } else if (bannerImg && userData.banner_color) {
-          // Se não tem banner, usa a cor do banner
+        } else if (bannerImg && response.data.banner_color) {
           bannerImg.style.display = 'none';
           const bannerContainer = document.getElementById('banner-container');
           if (bannerContainer) {
-            bannerContainer.style.background = userData.banner_color;
+            bannerContainer.style.background = response.data.banner_color;
           }
         }
         
-        // 3. Atualizar STATUS (online/dnd/idle/offline)
+        // 3. Status (agora vai funcionar!)
         const dot = document.getElementById('discord-dot');
-        if (dot && userData.discord_status) {
+        if (dot && status) {
           const colors = { online:'#43b581', dnd:'#f04747', idle:'#faa61a', offline:'#747f8d' };
-          dot.style.background = colors[userData.discord_status] || '#747f8d';
+          dot.style.background = colors[status] || '#747f8d';
         }
         
-        // 4. Atualizar NOME e TAG (se disponível)
+        // 4. Nome
         const nameEl = document.getElementById('profile-name');
-        if (nameEl && userData.global_name) {
-          nameEl.textContent = userData.global_name;
-        } else if (nameEl && userData.username) {
-          nameEl.textContent = userData.username;
+        if (nameEl) {
+          if (userData.global_name) {
+            nameEl.textContent = userData.global_name;
+          } else if (userData.username) {
+            nameEl.textContent = userData.username;
+          }
         }
         
-        // 5. Atualizar título da aba
+        // 5. Título da aba
         if (userData.global_name) {
           document.title = `${userData.global_name} | Bio`;
         } else if (userData.username) {
           document.title = `${userData.username} | Bio`;
         }
+        
+        console.log("Dados carregados:", userData.global_name, "Status:", status);
       })
       .catch(err => console.warn("Lanyard API error:", err));
   }
   
-  // Buscar dados do Discord ao carregar
   fetchDiscordData();
-  // Atualizar a cada 30 segundos
   setInterval(fetchDiscordData, 30000);
 
-  /* ── Music player com VOLUME BAIXO ── */
+  /* Music Player */
   const tracks = [
     { name: '505',    artist: 'Radiohead', url: 'https://files.catbox.moe/nfa0w7.mp3', art: 'https://files.catbox.moe/n7ydyi.jpg' },
     { name: 'Creep',  artist: 'Radiohead', url: 'https://files.catbox.moe/9njzq4.mp3', art: 'https://files.catbox.moe/az6ony.jpg' },
@@ -815,7 +794,6 @@
   if (nextBtn) nextBtn.addEventListener('click', () => loadTrack(cur + 1, playing));
   loadTrack(0, false);
 
-  /* ── Footer date ── */
   const lu = document.getElementById('last-updated');
   if (lu) {
     const d = new Date(document.lastModified);
@@ -823,7 +801,6 @@
     lu.textContent = 'atualizado em ' + months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
   }
 
-  /* ── Touch friends ── */
   document.querySelectorAll('.friend').forEach(el => {
     el.addEventListener('touchstart', function(e) {
       e.preventDefault();
