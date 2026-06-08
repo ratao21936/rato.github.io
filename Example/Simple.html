@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Exemplo | Bio Simples</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  
+  <!-- Favicon com emoji de pergaminho -->
+  <link rel="icon" type="image/png" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='50' font-size='80' text-anchor='middle' dominant-baseline='central'%3E📜%3C/text%3E%3C/svg%3E">
+  <link rel="shortcut icon" type="image/png" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='50' font-size='80' text-anchor='middle' dominant-baseline='central'%3E📜%3C/text%3E%3C/svg%3E">
+  
+  <style>
+    *, *::before, *::after {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --serif: 'Playfair Display', Georgia, serif;
+      --mono: 'DM Mono', 'Courier New', monospace;
+      --bg: #020617;
+      --surface: rgba(15,23,42,0.6);
+      --surface-hover: rgba(30,58,138,0.5);
+      --border: rgba(255,255,255,0.08);
+      --border-bright: rgba(96,165,250,0.3);
+      --t: rgba(255,255,255,0.65);
+      --td: rgba(255,255,255,0.3);
+      --b: #f0ede6;
+      --accent: #60A5FA;
+      --accent-dim: rgba(96,165,250,0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--t);
+      font-family: var(--mono);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .grain {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      opacity: 0.05;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    .gate {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #000000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      cursor: pointer;
+      pointer-events: auto;
+      user-select: none;
+    }
+    .gate-symbol {
+      font-family: var(--serif);
+      font-size: 64px;
+      font-weight: 400;
+      font-style: italic;
+      animation: breathe 3.5s ease-in-out infinite;
+    }
+    .gate-hint {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--td);
+      animation: breathe 3.5s ease-in-out infinite;
+      animation-delay: 0.3s;
+    }
+    @keyframes breathe {
+      0%,100% { opacity: 0.3; transform: scale(0.97); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+    .gate.out {
+      animation: gateOut 0.9s cubic-bezier(0.76,0,0.24,1) forwards;
+    }
+    @keyframes gateOut {
+      to { opacity: 0; transform: scale(1.06); visibility: hidden; pointer-events: none; }
+    }
+
+    .wrap {
+      max-width: 440px; margin: 0 auto;
+      padding: 72px 18px 80px;
+      display: flex; flex-direction: column; gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    .profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+      padding: 20px 0;
+    }
+    .avatar-wrap {
+      position: relative;
+      width: 88px;
+      height: 88px;
+    }
+    .avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent);
+    }
+    .profile-name {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--b);
+      letter-spacing: -0.5px;
+    }
+    .profile-sub {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--td);
+      margin-top: -4px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 22px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      transition: border-color 0.3s;
+    }
+    .card:hover { border-color: var(--border-bright); }
+
+    .section-label {
+      font-size: 9px;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--border-bright), transparent);
+    }
+
+    .tagline {
+      font-family: var(--serif);
+      font-size: 15px;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--b);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .about-pills {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .pill {
+      font-size: 11px; letter-spacing: 1px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(96,165,250,0.25);
+      color: var(--accent);
+      padding: 4px 11px; border-radius: 99px;
+    }
+
+    .lnk {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 4px;
+      text-decoration: none;
+      color: var(--t);
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      transition: color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .lnk::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: currentColor;
+      transform: scaleY(0);
+      transition: transform 0.2s ease;
+    }
+    .lnk:hover::before { transform: scaleY(1); }
+    .lnk:last-child { border-bottom: none; }
+    .lnk-platform {
+      font-family: var(--serif);
+      font-style: italic;
+      color: var(--b);
+      font-size: 14px;
+      min-width: 70px;
+    }
+    .lnk-handle { flex: 1; color: var(--td); font-size: 12px; }
+    .lnk-arrow { font-size: 11px; color: var(--td); }
+    .lnk:hover { color: var(--accent); }
+
+    .btn {
+      display: block;
+      text-align: center;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      border-radius: 99px;
+      padding: 12px 20px;
+      margin-top: 16px;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      transition: all 0.2s ease;
+    }
+    .btn:hover {
+      background: rgba(96,165,250,0.25);
+      transform: scale(1.02);
+    }
+
+    .foot {
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--td);
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .foot a { 
+      color: var(--td); 
+      text-decoration: none; 
+      transition: color 0.2s;
+    }
+    .foot a:hover { 
+      color: var(--accent); 
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 99px; }
+  </style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<div class="gate" id="gate">
+  <div class="gate-symbol">📜</div>
+  <div class="gate-hint">Click</div>
+</div>
+
+<div class="wrap" id="wrap" style="visibility: hidden;">
+  
+  <!-- AVISO DE EXEMPLO -->
+  <div class="reveal" style="transition-delay:.02s">
+    <div class="card" style="border-left: 3px solid #f0b232; text-align: center;">
+      <span style="font-size: 12px;">📌 <strong>EXEMPLO DE BIO SIMPLES</strong> - Este é um modelo demonstrativo. Você pode personalizar tudo!</span>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <div class="profile">
+      <div class="avatar-wrap">
+        <img src="https://placehold.co/400x400/1e3a8a/60A5FA?text=FOTO" alt="Sua Foto" class="avatar">
+      </div>
+      <div class="profile-name">Seu Nome</div>
+      <div class="profile-sub">Sua Cidade • Sua Profissão</div>
+    </div>
+  </div>
+
+  <div class="card reveal" style="transition-delay:.06s">
+    <div class="section-label">Sobre</div>
+    <p class="tagline">"Sua frase de efeito ou biografia aqui."</p>
+    <div class="about-pills">
+      <span class="pill">Personalizável</span>
+      <span class="pill">Editável</span>
+      <span class="pill">Seu Estilo</span>
+    </div>
+  </div>
+
+  <div class="card reveal" style="transition-delay:.12s">
+    <div class="section-label">Redes Sociais</div>
+    <div>
+      <a href="#" target="_blank" class="lnk">
+        <span class="lnk-platform">Instagram</span>
+        <span class="lnk-handle">@seu usuario</span>
+        <span class="lnk-arrow">↗</span>
+      </a>
+      <a href="#" target="_blank" class="lnk">
+        <span class="lnk-platform">TikTok</span>
+        <span class="lnk-handle">@seu usuario</span>
+        <span class="lnk-arrow">↗</span>
+      </a>
+      <a href="#" target="_blank" class="lnk">
+        <span class="lnk-platform">GitHub</span>
+        <span class="lnk-handle">@seu usuario</span>
+        <span class="lnk-arrow">↗</span>
+      </a>
+      <a href="#" target="_blank" class="lnk">
+        <span class="lnk-platform">Discord</span>
+        <span class="lnk-handle">seu usuario</span>
+        <span class="lnk-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- BOTÃO PARA ADQUIRIR -->
+  <div class="reveal" style="transition-delay:.18s">
+    <a href="https://discord.gg/fRWEHWQUWx" target="_blank" class="btn">
+      🛒 QUERO MINHA BIO PERSONALIZADA
+    </a>
+  </div>
+
+  <div class="foot reveal" style="transition-delay:.21s">
+    <span>Feito por</span>
+    <a href="https://discord.com/users/1231281182948196430" target="_blank">Rato</a>
+    <span>•</span>
+    <a href="https://discord.gg/fRWEHWQUWx" target="_blank">CustomBio's</a>
+  </div>
+</div>
+
+<script>
+(function () {
+  const gate = document.getElementById('gate');
+  const wrap = document.getElementById('wrap');
+  
+  function openSite() {
+    if (!gate) return;
+    gate.classList.add('out');
+    gate.addEventListener('animationend', function onEnd() {
+      gate.style.display = 'none';
+      gate.style.visibility = 'hidden';
+      gate.style.pointerEvents = 'none';
+      if (wrap) wrap.style.visibility = 'visible';
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            const delay = parseFloat(e.target.style.transitionDelay || '0') * 1000;
+            setTimeout(() => e.target.classList.add('in'), delay);
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.08 });
+      document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+      gate.removeEventListener('animationend', onEnd);
+    }, { once: true });
+  }
+
+  if (gate) {
+    gate.addEventListener('click', openSite);
+    gate.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      openSite();
+    }, { passive: false });
+    gate.style.cursor = 'pointer';
+  }
+})();
+</script>
+</body>
+</html>
