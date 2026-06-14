@@ -8,8 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
   
-  <link rel="icon" type="image/png" href="https://cdn.discordapp.com/emojis/1510721354834514110.png">
-  <link rel="shortcut icon" href="https://cdn.discordapp.com/emojis/1510721354834514110.png">
+  <!-- Favicon com emoji de fogo -->
+  <link rel="icon" type="image/png" href="https://cdn.discordapp.com/emojis/1515801969715839169.png">
+  <link rel="shortcut icon" href="https://cdn.discordapp.com/emojis/1515801969715839169.png">
   
   <style>
     *, *::before, *::after {
@@ -21,17 +22,17 @@
     :root {
       --serif: 'Playfair Display', Georgia, serif;
       --mono: 'DM Mono', 'Courier New', monospace;
-      --bg: #020617;
-      --surface: rgba(15,23,42,0.6);
-      --surface-hover: rgba(210,19,51,0.2);
-      --border: rgba(255,255,255,0.08);
-      --border-bright: rgba(210,19,51,0.5);
-      --t: rgba(255,255,255,0.65);
-      --td: rgba(255,255,255,0.3);
+      --bg: #050304;
+      --surface: rgba(18,6,8,0.65);
+      --surface-hover: rgba(210,19,19,0.25);
+      --border: rgba(210,19,19,0.22);
+      --border-bright: rgba(210,19,19,0.5);
+      --t: rgba(255,255,255,0.7);
+      --td: rgba(255,255,255,0.35);
       --b: #f0ede6;
       --accent: #d21313;
-      --accent-dim: rgba(210,19,51,0.2);
-      --accent-glow: rgba(210,19,51,0.6);
+      --accent-dim: rgba(210,19,19,0.25);
+      --accent-glow: rgba(210,19,19,0.6);
       --spotify-green: #1DB954;
       --gradient-start: #d21313;
       --gradient-end: #cc642c;
@@ -48,7 +49,8 @@
       position: relative;
     }
 
-    .leaves-container {
+    /* Partículas de fogo */
+    .fire-container {
       position: fixed;
       top: 0;
       left: 0;
@@ -58,7 +60,7 @@
       z-index: 9998;
       overflow: hidden;
     }
-    .leaf {
+    .fire-particle {
       position: absolute;
       top: -20px;
       background-size: contain;
@@ -67,25 +69,28 @@
       opacity: 0.7;
       pointer-events: none;
       animation: fall linear infinite;
+      filter: blur(1px);
     }
     @keyframes fall {
       0% { transform: translateY(-20px) rotate(0deg); opacity: 0.7; }
-      100% { transform: translateY(100vh) rotate(360deg); opacity: 0.2; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
     }
 
     .video-bg {
       position: fixed; inset: 0; z-index: -2; overflow: hidden;
     }
     .video-bg video {
-      width: 100%; height: 100%; object-fit: cover;
-      filter: brightness(0.25) saturate(0.8);
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.2) saturate(0.4) contrast(1.3);
     }
     .video-bg::after {
       content: '';
       position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(2,6,23,0) 0%, rgba(2,6,23,0.8) 70%, rgba(2,6,23,1) 100%),
-        linear-gradient(to bottom, rgba(2,6,23,0.4) 0%, rgba(15,23,42,0.7) 100%);
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(20,0,0,0) 0%, rgba(20,0,0,0.7) 70%, rgba(5,3,4,0.95) 100%),
+        linear-gradient(to bottom, rgba(20,0,0,0.35) 0%, rgba(5,3,4,0.85) 100%);
     }
 
     .grain {
@@ -113,7 +118,7 @@
     .gate-symbol img {
       width: 80px;
       height: 80px;
-      filter: drop-shadow(0 0 15px rgba(210,19,51,0.8));
+      filter: drop-shadow(0 0 15px rgba(210,19,19,0.8));
       animation: breathe 3.5s ease-in-out infinite;
     }
     .gate-hint {
@@ -140,25 +145,32 @@
 
     .topbar {
       position: fixed; top: 16px; left: 0; right: 0;
-      display: flex; justify-content: space-between; align-items: center;
+      display: flex; justify-content: space-between;
+      align-items: center;
       padding: 0 18px; z-index: 100; pointer-events: none;
     }
     .views {
-      display: flex; align-items: center; gap: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
       background: rgba(0,0,0,0.6);
       border: 1px solid var(--border-bright);
       backdrop-filter: blur(20px);
       padding: 5px 13px 5px 10px;
       border-radius: 99px;
-      font-size: 11px; font-weight: 500;
-      color: var(--b); letter-spacing: 0.5px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--b);
+      letter-spacing: 0.5px;
       pointer-events: auto;
     }
 
     .wrap {
       max-width: 440px; margin: 0 auto;
       padding: 72px 18px 80px;
-      display: flex; flex-direction: column; gap: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
       position: relative;
       z-index: 1;
     }
@@ -170,8 +182,10 @@
     .reveal.in { opacity: 1; transform: translateY(0); }
 
     .profile {
-      display: flex; flex-direction: column;
-      gap: 12px; text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
       position: relative;
     }
     
@@ -179,6 +193,8 @@
       position: relative;
       width: 100%;
       margin-bottom: 48px;
+      overflow: hidden;
+      border-radius: 20px;
     }
     .profile-banner {
       width: 100%;
@@ -187,6 +203,7 @@
       border-radius: 20px;
       overflow: hidden;
       border: 1px solid var(--border-bright);
+      transition: transform 0.3s ease-out;
     }
     .profile-banner video {
       width: 100%;
@@ -232,11 +249,11 @@
       opacity: 0.6;
       animation: ringPulse 3s ease-in-out infinite;
       pointer-events: none;
-      box-shadow: 0 0 8px rgba(210,19,51,0.5);
+      box-shadow: 0 0 8px rgba(210,19,19,0.5);
     }
     @keyframes ringPulse {
-      0%,100% { transform: scale(1); opacity: 0.4; box-shadow: 0 0 5px rgba(210,19,51,0.3); }
-      50% { transform: scale(1.05); opacity: 0.8; box-shadow: 0 0 15px rgba(210,19,51,0.7); }
+      0%,100% { transform: scale(1); opacity: 0.4; box-shadow: 0 0 5px rgba(210,19,19,0.3); }
+      50% { transform: scale(1.05); opacity: 0.8; box-shadow: 0 0 15px rgba(210,19,19,0.7); }
     }
     .status-dot {
       position: absolute; bottom: 6px; right: 6px;
@@ -263,7 +280,7 @@
     }
     .profile-tag {
       display: inline-block;
-      background: rgba(210,19,51,0.2);
+      background: rgba(210,19,19,0.25);
       border: 1px solid var(--accent);
       border-radius: 20px;
       padding: 4px 12px;
@@ -312,6 +329,40 @@
       width: 18px;
       height: 18px;
       vertical-align: middle;
+    }
+    
+    /* Likes e Deslikes */
+    .reactions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .reaction-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,0,0,0.3);
+      padding: 6px 14px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 13px;
+      border: 1px solid var(--border);
+    }
+    .reaction-btn img {
+      width: 18px;
+      height: 18px;
+    }
+    .reaction-btn:hover {
+      background: rgba(210,19,19,0.25);
+      border-color: var(--accent);
+      transform: scale(1.02);
+    }
+    .reaction-count {
+      color: var(--td);
+      font-weight: 500;
     }
 
     .card {
@@ -364,12 +415,11 @@
     .pill {
       font-size: 11px; letter-spacing: 1px;
       background: var(--accent-dim);
-      border: 1px solid rgba(210,19,51,0.3);
+      border: 1px solid rgba(210,19,19,0.3);
       color: var(--accent);
       padding: 4px 11px; border-radius: 99px;
     }
 
-    /* Ouvindo agora - Spotify */
     .now-playing {
       display: flex;
       align-items: center;
@@ -497,7 +547,7 @@
       transform: scale(1.14);
       border-color: var(--accent);
       filter: grayscale(0);
-      box-shadow: 0 0 8px rgba(210,19,51,0.5);
+      box-shadow: 0 0 8px rgba(210,19,19,0.5);
     }
     .friend-tip {
       position: absolute; bottom: calc(100% + 8px); left: 50%;
@@ -595,17 +645,17 @@
       transition: all 0.2s ease;
     }
     .ctrl-btn:hover {
-      background: rgba(210,19,51,0.25);
+      background: rgba(210,19,19,0.3);
       border-color: var(--accent);
       color: var(--accent);
     }
     .ctrl-btn.primary {
-      background: rgba(210,19,51,0.2);
+      background: rgba(210,19,19,0.25);
       border-color: var(--accent);
       color: var(--accent);
     }
     .ctrl-btn.primary:hover {
-      background: rgba(210,19,51,0.35);
+      background: rgba(210,19,19,0.4);
       transform: scale(1.02);
     }
     .player-progress {
@@ -686,7 +736,7 @@
     }
     .contact-link {
       display: inline-block;
-      background: rgba(210,19,51,0.15);
+      background: rgba(210,19,19,0.2);
       border: 1px solid var(--accent);
       border-radius: 99px;
       padding: 8px 20px;
@@ -697,7 +747,7 @@
       margin-top: 4px;
     }
     .contact-link:hover {
-      background: rgba(210,19,51,0.3);
+      background: rgba(210,19,19,0.35);
       transform: scale(1.02);
       color: var(--accent);
     }
@@ -705,23 +755,49 @@
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 99px; }
+    
+    /* Loading */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000000;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s;
+    }
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(210,19,19,0.3);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
 
-<div class="leaves-container" id="leaves-container"></div>
+<div class="loading-overlay" id="loading">
+  <div class="loading-spinner"></div>
+</div>
 
+<div class="fire-container" id="fire-container"></div>
 <div class="grain"></div>
 
 <div class="video-bg">
-  <video id="bg-video" loop playsinline preload="auto" muted>
-    <source src="https://files.catbox.moe/3xm2ia.mp4" type="video/mp4">
+  <video id="bg-video" loop playsinline preload="none" muted>
+    <source src="" type="video/mp4">
   </video>
 </div>
 
 <div class="gate" id="gate">
   <div class="gate-symbol">
-    <img src="https://cdn.discordapp.com/emojis/1510721354834514110.png" alt="Folha">
+    <img src="https://cdn.discordapp.com/emojis/1515801969715839169.png" alt="Fogo">
   </div>
   <div class="gate-hint">Click</div>
 </div>
@@ -740,9 +816,9 @@
   <div class="reveal">
     <div class="profile">
       <div class="banner-container">
-        <div class="profile-banner">
-          <video id="banner-video" autoplay loop muted playsinline preload="metadata" disablePictureInPicture fetchpriority="high">
-            <source src="https://files.catbox.moe/9trkpw.mp4" type="video/mp4">
+        <div class="profile-banner" id="banner-video-container">
+          <video id="banner-video" autoplay loop muted playsinline preload="none" disablePictureInPicture>
+            <source src="" type="video/mp4">
           </video>
         </div>
         <div class="avatar-wrapper">
@@ -762,6 +838,17 @@
         <span class="thinking-icon">💭</span>
         <span class="thinking-text" id="thinking-text">Carregando...</span>
       </div>
+      
+      <div class="reactions">
+        <div class="reaction-btn" id="like-btn">
+          <img src="https://cdn.discordapp.com/emojis/1515802046849093845.png" alt="Like">
+          <span class="reaction-count" id="like-count">0</span>
+        </div>
+        <div class="reaction-btn" id="dislike-btn">
+          <img src="https://cdn.discordapp.com/emojis/1515802012694876292.png" alt="Dislike">
+          <span class="reaction-count" id="dislike-count">0</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -775,7 +862,6 @@
     </div>
   </div>
 
-  <!-- Ouvindo agora - Spotify -->
   <div class="card reveal" style="transition-delay:.09s">
     <div class="section-label">
       <img src="https://cdn.discordapp.com/emojis/1513038422367797269.png" alt="Spotify">
@@ -904,42 +990,224 @@
 <script>
 (function () {
   const DISCORD_USER_ID = "1231281182948196430";
-  const LEAF_EMOJI_URL = "https://cdn.discordapp.com/emojis/1510721354834514110.png";
+  const FIRE_EMOJI_URL = "https://cdn.discordapp.com/emojis/1515801969715839169.png";
   const SPOTIFY_EMOJI_URL = "https://cdn.discordapp.com/emojis/1513038422367797269.png";
+  const LIKE_EMOJI_URL = "https://cdn.discordapp.com/emojis/1515802046849093845.png";
+  const DISLIKE_EMOJI_URL = "https://cdn.discordapp.com/emojis/1515802012694876292.png";
   
   const gate = document.getElementById('gate');
   const wrap = document.getElementById('wrap');
   const bgVideo = document.getElementById('bg-video');
   const bannerVideo = document.getElementById('banner-video');
+  const loadingOverlay = document.getElementById('loading');
   
   let currentSpotifyData = null;
   let spotifyTimer = null;
   let currentTrackId = null;
   
-  if (bgVideo) {
-    bgVideo.muted = true;
-    bgVideo.volume = 0;
+  // ========== PARALLAX ==========
+  const bannerContainer = document.querySelector('.banner-container');
+  const bannerVideoElem = document.querySelector('#banner-video');
+  const profileBanner = document.querySelector('.profile-banner');
+  
+  // Mouse Parallax
+  document.addEventListener('mousemove', (e) => {
+    if (!profileBanner) return;
+    const x = (e.clientX / window.innerWidth - 0.5) * 15;
+    const y = (e.clientY / window.innerHeight - 0.5) * 15;
+    profileBanner.style.transform = `scale(1.05) translate(${x}px, ${y}px)`;
+  });
+  
+  // Giroscópio para celular
+  if (window.DeviceOrientationEvent) {
+    window.addEventListener('deviceorientation', (e) => {
+      if (!profileBanner) return;
+      const x = e.gamma || 0;
+      const y = e.beta || 0;
+      profileBanner.style.transform = `scale(1.05) translate(${x / 3}px, ${y / 3}px)`;
+    });
   }
   
-  if (bannerVideo) {
-    bannerVideo.muted = true;
-    bannerVideo.volume = 0;
-    bannerVideo.play().catch(() => {});
+  // ========== PARTÍCULAS ADAPTATIVAS ==========
+  const fireContainer = document.getElementById('fire-container');
+  const isMobile = window.innerWidth < 600;
+  const particleSpeed = isMobile ? 2000 : 800;
+  const particleSize = isMobile ? 12 : 24;
+  
+  function createFireParticle() {
+    const particle = document.createElement('div');
+    particle.classList.add('fire-particle');
+    particle.style.left = Math.random() * 100 + '%';
+    const size = Math.random() * particleSize + (isMobile ? 8 : 15);
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.animationDuration = Math.random() * (isMobile ? 8 : 5) + (isMobile ? 6 : 4) + 's';
+    particle.style.animationDelay = Math.random() * 10 + 's';
+    particle.style.backgroundImage = `url('${FIRE_EMOJI_URL}')`;
+    particle.style.backgroundSize = 'contain';
+    particle.style.backgroundRepeat = 'no-repeat';
+    particle.style.opacity = Math.random() * 0.6 + 0.2;
+    fireContainer.appendChild(particle);
+    
+    setTimeout(() => {
+      if (particle && particle.remove) particle.remove();
+    }, isMobile ? 20000 : 15000);
   }
   
+  // ========== PRELOAD INTELIGENTE ==========
+  function loadVideos() {
+    // Vídeo de fundo
+    bgVideo.querySelector('source').src = 'https://files.catbox.moe/3xm2ia.mp4';
+    bgVideo.load();
+    bgVideo.play().catch(() => {});
+    
+    // Vídeo do banner
+    if (bannerVideo) {
+      bannerVideo.querySelector('source').src = 'https://files.catbox.moe/9trkpw.mp4';
+      bannerVideo.load();
+      bannerVideo.play().catch(() => {});
+    }
+  }
+  
+  // ========== FIREBASE ==========
+  const firebaseConfig = {
+    apiKey: "AIzaSyAbctCi7FEjZqDxJxiW7Ru4ddi396dtmZ0",
+    authDomain: "bio-rato.firebaseapp.com",
+    databaseURL: "https://bio-rato-default-rtdb.firebaseio.com",
+    projectId: "bio-rato",
+    storageBucket: "bio-rato.firebasestorage.app",
+    messagingSenderId: "208785987108",
+    appId: "1:208785987108:web:76608642c207bb86dceab1",
+    measurementId: "G-REJ4J8B2RP"
+  };
+  
+  let userLiked = false;
+  let userDisliked = false;
+  let currentUserIP = "";
+  
+  async function getUserIP() {
+    try {
+      const response = await fetch('https://api.ipify.org?format=json');
+      const data = await response.json();
+      return data.ip;
+    } catch(e) {
+      return localStorage.getItem('tempUserId') || 'user_' + Date.now();
+    }
+  }
+  
+  async function initFirebase() {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    
+    const db = firebase.database();
+    currentUserIP = await getUserIP();
+    
+    const viewRef = db.ref('contador');
+    viewRef.on('value', (snap) => {
+      const el = document.getElementById('view-count');
+      if (el) {
+        let v = snap.val() || 0;
+        if (v >= 1000000) {
+          el.textContent = (v/1000000).toFixed(3) + 'M';
+        } else if (v >= 1000) {
+          el.textContent = (v/1000).toFixed(3) + 'k';
+        } else {
+          el.textContent = v;
+        }
+      }
+    });
+    
+    const viewKey = `view_${currentUserIP}`;
+    if (!localStorage.getItem(viewKey)) {
+      viewRef.transaction(c => (c || 0) + 1);
+      localStorage.setItem(viewKey, 'true');
+    }
+    
+    const likesRef = db.ref('likes');
+    likesRef.on('value', (snap) => {
+      const likeCountEl = document.getElementById('like-count');
+      if (likeCountEl) likeCountEl.textContent = snap.val() || 0;
+    });
+    
+    const dislikesRef = db.ref('deslikes');
+    dislikesRef.on('value', (snap) => {
+      const dislikeCountEl = document.getElementById('dislike-count');
+      if (dislikeCountEl) dislikeCountEl.textContent = snap.val() || 0;
+    });
+    
+    const userLikeKey = `like_${currentUserIP}`;
+    const userDislikeKey = `dislike_${currentUserIP}`;
+    userLiked = localStorage.getItem(userLikeKey) === 'true';
+    userDisliked = localStorage.getItem(userDislikeKey) === 'true';
+    
+    const likeBtn = document.getElementById('like-btn');
+    const dislikeBtn = document.getElementById('dislike-btn');
+    
+    if (likeBtn) {
+      likeBtn.addEventListener('click', async () => {
+        if (userLiked) return;
+        if (userDisliked) {
+          await dislikesRef.transaction(c => Math.max(0, (c || 0) - 1));
+          localStorage.removeItem(userDislikeKey);
+          userDisliked = false;
+        }
+        await likesRef.transaction(c => (c || 0) + 1);
+        localStorage.setItem(userLikeKey, 'true');
+        userLiked = true;
+      });
+    }
+    
+    if (dislikeBtn) {
+      dislikeBtn.addEventListener('click', async () => {
+        if (userDisliked) return;
+        if (userLiked) {
+          await likesRef.transaction(c => Math.max(0, (c || 0) - 1));
+          localStorage.removeItem(userLikeKey);
+          userLiked = false;
+        }
+        await dislikesRef.transaction(c => (c || 0) + 1);
+        localStorage.setItem(userDislikeKey, 'true');
+        userDisliked = true;
+      });
+    }
+  }
+  
+  initFirebase().catch(console.error);
+  
+  // ========== OPEN SITE ==========
   function openSite() {
     if (!gate) return;
+    
+    // Mostrar loading
+    if (loadingOverlay) loadingOverlay.style.display = 'flex';
+    
+    // Carregar vídeos
+    loadVideos();
+    
     gate.classList.add('out');
     gate.addEventListener('animationend', function onEnd() {
       gate.style.display = 'none';
       gate.style.visibility = 'hidden';
       gate.style.pointerEvents = 'none';
       if (wrap) wrap.style.visibility = 'visible';
-      if (bgVideo) { 
-        bgVideo.muted = true;
-        bgVideo.volume = 0;
-        bgVideo.play().catch(()=>{}); 
+      
+      // Esconder loading após um pequeno delay
+      setTimeout(() => {
+        if (loadingOverlay) {
+          loadingOverlay.style.opacity = '0';
+          setTimeout(() => {
+            if (loadingOverlay) loadingOverlay.style.display = 'none';
+          }, 500);
+        }
+      }, 1000);
+      
+      // Iniciar partículas de fogo
+      setInterval(createFireParticle, particleSpeed);
+      for (let i = 0; i < (isMobile ? 5 : 10); i++) {
+        setTimeout(createFireParticle, i * (particleSpeed / 3));
       }
+      
       const obs = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (e.isIntersecting) {
@@ -953,7 +1221,7 @@
       gate.removeEventListener('animationend', onEnd);
     }, { once: true });
   }
-
+  
   if (gate) {
     gate.addEventListener('click', openSite);
     gate.addEventListener('touchstart', function(e) {
@@ -963,76 +1231,8 @@
     }, { passive: false });
     gate.style.cursor = 'pointer';
   }
-
-  if (bgVideo) { 
-    bgVideo.load(); 
-    bgVideo.muted = true;
-    bgVideo.volume = 0;
-    bgVideo.play().catch(()=>{}); 
-  }
-
-  // Folhas caindo
-  const leavesContainer = document.getElementById('leaves-container');
   
-  function createLeaf() {
-    const leaf = document.createElement('div');
-    leaf.classList.add('leaf');
-    leaf.style.left = Math.random() * 100 + '%';
-    const size = Math.random() * 20 + 15;
-    leaf.style.width = size + 'px';
-    leaf.style.height = size + 'px';
-    leaf.style.animationDuration = Math.random() * 5 + 4 + 's';
-    leaf.style.animationDelay = Math.random() * 10 + 's';
-    leaf.style.backgroundImage = `url('${LEAF_EMOJI_URL}')`;
-    leaf.style.opacity = Math.random() * 0.5 + 0.3;
-    leavesContainer.appendChild(leaf);
-    
-    setTimeout(() => {
-      if (leaf && leaf.remove) leaf.remove();
-    }, 15000);
-  }
-  
-  setInterval(createLeaf, 800);
-  for (let i = 0; i < 10; i++) {
-    setTimeout(createLeaf, i * 300);
-  }
-
-  /* Firebase */
-  try {
-    const firebaseConfig = {
-      apiKey: "AIzaSyAbctCi7FEjZqDxJxiW7Ru4ddi396dtmZ0",
-      authDomain: "bio-rato.firebaseapp.com",
-      projectId: "bio-rato",
-      storageBucket: "bio-rato.firebasestorage.app",
-      messagingSenderId: "208785987108",
-      appId: "1:208785987108:web:76608642c207bb86dceab1",
-      measurementId: "G-REJ4J8B2RP"
-    };
-    
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    
-    const ref = firebase.database().ref('contador');
-    ref.transaction(c => (c || 0) + 1);
-    
-    ref.on('value', snap => {
-      const el = document.getElementById('view-count');
-      if (el) { 
-        let v = snap.val() || 0; 
-        if (v >= 1000000) {
-          el.textContent = (v/1000000).toFixed(3) + 'M';
-        } else if (v >= 1000) {
-          el.textContent = (v/1000).toFixed(3) + 'k';
-        } else {
-          el.textContent = v;
-        }
-      }
-    });
-  } catch(e) {
-    console.warn("Firebase error:", e);
-  }
-
+  // ========== SPOTIFY TIMER ==========
   function formatSeconds(seconds) {
     if (isNaN(seconds)) return '0:00';
     const mins = Math.floor(seconds / 60);
@@ -1068,16 +1268,11 @@
   }
   
   function startSpotifyTimer(spotifyData) {
-    if (spotifyTimer) {
-      clearInterval(spotifyTimer);
-      spotifyTimer = null;
-    }
-    
+    if (spotifyTimer) clearInterval(spotifyTimer);
     if (!spotifyData || !spotifyData.song) return;
     
     const startTime = spotifyData.timestamps?.start;
     const endTime = spotifyData.timestamps?.end;
-    
     if (!startTime || !endTime) return;
     
     const totalDuration = (endTime - startTime) / 1000;
@@ -1086,15 +1281,10 @@
       const now = Date.now();
       const elapsed = (now - startTime) / 1000;
       const currentTime = Math.max(0, Math.min(elapsed, totalDuration));
-      
       if (currentTime >= totalDuration) {
-        if (spotifyTimer) {
-          clearInterval(spotifyTimer);
-          spotifyTimer = null;
-        }
+        if (spotifyTimer) clearInterval(spotifyTimer);
         return;
       }
-      
       updateSpotifyDisplay(spotifyData, currentTime, totalDuration);
     }
     
@@ -1103,16 +1293,13 @@
   }
   
   function stopSpotifyTimer() {
-    if (spotifyTimer) {
-      clearInterval(spotifyTimer);
-      spotifyTimer = null;
-    }
+    if (spotifyTimer) clearInterval(spotifyTimer);
     const nowPlayingContainer = document.getElementById('now-playing-container');
     if (nowPlayingContainer) {
       nowPlayingContainer.innerHTML = '<div class="no-music">Nenhuma música tocando no momento</div>';
     }
   }
-
+  
   function fetchDiscordData() {
     fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`)
       .then(r => r.json())
@@ -1139,24 +1326,20 @@
         
         const displayNameEl = document.getElementById('profile-display-name');
         const tagEl = document.getElementById('profile-tag');
-        
         if (displayNameEl) {
           displayNameEl.textContent = userData.global_name || userData.username || "Rato";
         }
-        
-        if (tagEl && userData.primary_guild && userData.primary_guild.tag) {
+        if (tagEl && userData.primary_guild?.tag) {
           tagEl.textContent = userData.primary_guild.tag;
           tagEl.style.display = 'inline-block';
-        } else if (tagEl) {
-          tagEl.style.display = 'none';
-        }
+        } else if (tagEl) tagEl.style.display = 'none';
         
         document.title = `${userData.global_name || userData.username || "Rato"} | Bio`;
         
         const customStatus = activities.find(a => a.type === 4);
         const thinkingTextEl = document.getElementById('thinking-text');
         if (thinkingTextEl) {
-          if (customStatus && customStatus.state) {
+          if (customStatus?.state) {
             let emojiHtml = '';
             if (customStatus.emoji) {
               if (customStatus.emoji.id) {
@@ -1173,8 +1356,7 @@
         }
         
         const newTrackId = spotify?.track_id || null;
-        
-        if (spotify && spotify.song) {
+        if (spotify?.song) {
           if (currentTrackId !== newTrackId) {
             currentTrackId = newTrackId;
             currentSpotifyData = spotify;
@@ -1182,25 +1364,13 @@
           } else if (currentSpotifyData && !spotifyTimer) {
             startSpotifyTimer(spotify);
           }
-        } else {
-          if (currentTrackId !== null) {
-            currentTrackId = null;
-            currentSpotifyData = null;
-            stopSpotifyTimer();
-          }
+        } else if (currentTrackId !== null) {
+          currentTrackId = null;
+          currentSpotifyData = null;
+          stopSpotifyTimer();
         }
       })
-      .catch(err => {
-        console.warn("Lanyard API error:", err);
-        const nowPlayingContainer = document.getElementById('now-playing-container');
-        if (nowPlayingContainer && !currentSpotifyData) {
-          nowPlayingContainer.innerHTML = '<div class="no-music">Erro ao carregar música</div>';
-        }
-        const thinkingTextEl = document.getElementById('thinking-text');
-        if (thinkingTextEl) {
-          thinkingTextEl.innerHTML = `<span>Erro ao carregar</span>`;
-        }
-      });
+      .catch(err => console.warn("Lanyard API error:", err));
   }
   
   function escapeHtml(text) {
@@ -1215,33 +1385,33 @@
   
   fetchDiscordData();
   setInterval(fetchDiscordData, 15000);
-
-  /* Music Player */
+  
+  // ========== MUSIC PLAYER ==========
   const tracks = [
-    { name: '505',    artist: 'Radiohead', url: 'https://files.catbox.moe/nfa0w7.mp3', art: 'https://files.catbox.moe/n7ydyi.jpg' },
-    { name: 'Creep',  artist: 'Radiohead', url: 'https://files.catbox.moe/9njzq4.mp3', art: 'https://files.catbox.moe/az6ony.jpg' },
-    { name: 'Unhappy',artist: 'S0rrow',   url: 'https://files.catbox.moe/5hll5l.mp3', art: 'https://files.catbox.moe/02400j.webp' }
+    { name: '505', artist: 'Radiohead', url: 'https://files.catbox.moe/nfa0w7.mp3', art: 'https://files.catbox.moe/n7ydyi.jpg' },
+    { name: 'Creep', artist: 'Radiohead', url: 'https://files.catbox.moe/9njzq4.mp3', art: 'https://files.catbox.moe/az6ony.jpg' },
+    { name: 'Unhappy', artist: 'S0rrow', url: 'https://files.catbox.moe/5hll5l.mp3', art: 'https://files.catbox.moe/02400j.webp' }
   ];
-
+  
   let cur = 0, playing = false;
   const audio = new Audio();
   audio.volume = 0.3;
   
-  const playBtn  = document.getElementById('play-btn');
-  const nextBtn  = document.getElementById('next-btn');
-  const artImg   = document.getElementById('player-art');
-  const titleEl  = document.getElementById('player-title');
+  const playBtn = document.getElementById('play-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const artImg = document.getElementById('player-art');
+  const titleEl = document.getElementById('player-title');
   const artistEl = document.getElementById('player-artist');
   const progFill = document.getElementById('progress-fill');
-  const timeCur  = document.getElementById('time-cur');
-  const timeTot  = document.getElementById('time-tot');
-  const progBar  = document.getElementById('progress-bar');
-
+  const timeCur = document.getElementById('time-cur');
+  const timeTot = document.getElementById('time-tot');
+  const progBar = document.getElementById('progress-bar');
+  
   function fmt(s) {
     const m = Math.floor(s/60), sec = Math.floor(s%60);
     return m+':'+(sec<10?'0':'')+sec;
   }
-
+  
   function loadTrack(i, autoplay) {
     cur = ((i % tracks.length) + tracks.length) % tracks.length;
     const t = tracks[cur];
@@ -1267,7 +1437,7 @@
       }).catch(()=>{});
     }
   }
-
+  
   function togglePlay() {
     if (playing) {
       audio.pause(); playing = false;
@@ -1280,7 +1450,7 @@
       }).catch(()=>{});
     }
   }
-
+  
   audio.addEventListener('timeupdate', () => {
     if (!audio.duration) return;
     const pct = (audio.currentTime / audio.duration) * 100;
@@ -1288,9 +1458,9 @@
     timeCur.textContent = fmt(audio.currentTime);
     timeTot.textContent = fmt(audio.duration);
   });
-
+  
   audio.addEventListener('ended', () => loadTrack(cur + 1, true));
-
+  
   if (progBar) {
     progBar.addEventListener('click', e => {
       if (!audio.duration) return;
@@ -1298,18 +1468,18 @@
       audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
     });
   }
-
+  
   if (playBtn) playBtn.addEventListener('click', togglePlay);
   if (nextBtn) nextBtn.addEventListener('click', () => loadTrack(cur + 1, playing));
   loadTrack(0, false);
-
+  
   const lu = document.getElementById('last-updated');
   if (lu) {
     const d = new Date(document.lastModified);
     const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
     lu.textContent = 'atualizado em ' + months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
   }
-
+  
   document.querySelectorAll('.friend').forEach(el => {
     el.addEventListener('touchstart', function(e) {
       e.preventDefault();
