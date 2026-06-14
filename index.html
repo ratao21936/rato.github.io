@@ -19,20 +19,23 @@
     }
 
     :root {
-  --serif: 'Playfair Display', Georgia, serif;
-  --mono: 'DM Mono', 'Courier New', monospace;
-  --bg: #020617;
-  --surface: rgba(15,23,42,0.6);
-  --surface-hover: rgba(210,19,51,0.15);
-  --border: rgba(255,255,255,0.08);
-  --border-bright: rgba(210,19,51,0.4);
-  --t: rgba(255,255,255,0.65);
-  --td: rgba(255,255,255,0.3);
-  --b: #f0ede6;
-  --accent: #d21313;
-  --accent-dim: rgba(210,19,51,0.18);
-  --spotify-green: #1DB954;
-}
+      --serif: 'Playfair Display', Georgia, serif;
+      --mono: 'DM Mono', 'Courier New', monospace;
+      --bg: #020617;
+      --surface: rgba(15,23,42,0.6);
+      --surface-hover: rgba(210,19,51,0.2);
+      --border: rgba(255,255,255,0.08);
+      --border-bright: rgba(210,19,51,0.5);
+      --t: rgba(255,255,255,0.65);
+      --td: rgba(255,255,255,0.3);
+      --b: #f0ede6;
+      --accent: #d21313;
+      --accent-dim: rgba(210,19,51,0.2);
+      --accent-glow: rgba(210,19,51,0.6);
+      --spotify-green: #1DB954;
+      --gradient-start: #d21313;
+      --gradient-end: #cc642c;
+    }
 
     html { scroll-behavior: smooth; }
 
@@ -110,7 +113,7 @@
     .gate-symbol img {
       width: 80px;
       height: 80px;
-      filter: drop-shadow(0 0 10px rgba(96,165,250,0.5));
+      filter: drop-shadow(0 0 15px rgba(210,19,51,0.8));
       animation: breathe 3.5s ease-in-out infinite;
     }
     .gate-hint {
@@ -180,7 +183,7 @@
     .profile-banner {
       width: 100%;
       height: 130px;
-      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
       border-radius: 20px;
       overflow: hidden;
       border: 1px solid var(--border-bright);
@@ -225,14 +228,15 @@
       position: absolute;
       inset: -2px;
       border-radius: 50%;
-      border: 1px solid var(--accent);
-      opacity: 0.5;
+      border: 2px solid var(--accent);
+      opacity: 0.6;
       animation: ringPulse 3s ease-in-out infinite;
       pointer-events: none;
+      box-shadow: 0 0 8px rgba(210,19,51,0.5);
     }
     @keyframes ringPulse {
-      0%,100% { transform: scale(1); opacity: 0.3; }
-      50% { transform: scale(1.04); opacity: 0.6; }
+      0%,100% { transform: scale(1); opacity: 0.4; box-shadow: 0 0 5px rgba(210,19,51,0.3); }
+      50% { transform: scale(1.05); opacity: 0.8; box-shadow: 0 0 15px rgba(210,19,51,0.7); }
     }
     .status-dot {
       position: absolute; bottom: 6px; right: 6px;
@@ -259,7 +263,7 @@
     }
     .profile-tag {
       display: inline-block;
-      background: rgba(96,165,250,0.2);
+      background: rgba(210,19,51,0.2);
       border: 1px solid var(--accent);
       border-radius: 20px;
       padding: 4px 12px;
@@ -347,8 +351,11 @@
 
     .tagline {
       font-family: var(--serif);
-      font-size: 15px; font-style: italic; font-weight: 400;
-      color: var(--b); line-height: 1.6;
+      font-size: 15px;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--b);
+      line-height: 1.6;
       margin-bottom: 14px;
     }
     .about-pills {
@@ -357,7 +364,7 @@
     .pill {
       font-size: 11px; letter-spacing: 1px;
       background: var(--accent-dim);
-      border: 1px solid rgba(96,165,250,0.25);
+      border: 1px solid rgba(210,19,51,0.3);
       color: var(--accent);
       padding: 4px 11px; border-radius: 99px;
     }
@@ -435,10 +442,12 @@
     .lnk::before {
       content: '';
       position: absolute; left: 0; top: 0; bottom: 0;
-      width: 2px; background: currentColor;
-      transform: scaleY(0); transform-origin: center;
+      width: 2px;
+      background: var(--accent);
+      transform: scaleY(0);
+      transform-origin: center;
       transition: transform 0.2s ease;
-      opacity: 0.6;
+      opacity: 0.8;
     }
     .lnk:hover::before { transform: scaleY(1); }
     .lnk:last-child { border-bottom: none; }
@@ -476,7 +485,8 @@
       text-decoration: none; cursor: pointer; flex-shrink: 0;
     }
     .friend img {
-      width: 34px; height: 34px; border-radius: 50%;
+      width: 34px; height: 34px;
+      border-radius: 50%;
       object-fit: cover;
       border: 1px solid var(--border);
       display: block;
@@ -484,7 +494,10 @@
       filter: grayscale(0.3);
     }
     .friend:hover img, .friend.touched img {
-      transform: scale(1.14); border-color: var(--accent); filter: grayscale(0);
+      transform: scale(1.14);
+      border-color: var(--accent);
+      filter: grayscale(0);
+      box-shadow: 0 0 8px rgba(210,19,51,0.5);
     }
     .friend-tip {
       position: absolute; bottom: calc(100% + 8px); left: 50%;
@@ -579,20 +592,21 @@
       font-size: 11px;
       letter-spacing: 1px;
       text-transform: uppercase;
-      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      transition: all 0.2s ease;
     }
     .ctrl-btn:hover {
-      background: var(--surface-hover);
-      border-color: var(--border-bright);
-      color: var(--b);
+      background: rgba(210,19,51,0.25);
+      border-color: var(--accent);
+      color: var(--accent);
     }
     .ctrl-btn.primary {
-      background: var(--accent-dim);
-      border-color: rgba(96,165,250,0.3);
+      background: rgba(210,19,51,0.2);
+      border-color: var(--accent);
       color: var(--accent);
     }
     .ctrl-btn.primary:hover {
-      background: rgba(96,165,250,0.25);
+      background: rgba(210,19,51,0.35);
+      transform: scale(1.02);
     }
     .player-progress {
       position: relative;
@@ -607,7 +621,7 @@
       left: 0;
       top: 0;
       bottom: 0;
-      background: linear-gradient(to right, var(--accent), rgba(96,165,250,0.5));
+      background: linear-gradient(to right, var(--accent), #cc642c);
       border-radius: 2px;
       width: 0%;
       transition: width 0.3s linear;
@@ -672,8 +686,8 @@
     }
     .contact-link {
       display: inline-block;
-      background: rgba(96,165,250,0.15);
-      border: 1px solid var(--border-bright);
+      background: rgba(210,19,51,0.15);
+      border: 1px solid var(--accent);
       border-radius: 99px;
       padding: 8px 20px;
       font-size: 11px;
@@ -683,14 +697,14 @@
       margin-top: 4px;
     }
     .contact-link:hover {
-      background: rgba(96,165,250,0.25);
+      background: rgba(210,19,51,0.3);
       transform: scale(1.02);
       color: var(--accent);
     }
 
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 99px; }
   </style>
 </head>
 <body>
@@ -824,10 +838,10 @@
         <a class="friend" data-name="Dvlarxzed" href="https://discord.com/users/1377288453821169664" target="_blank">
           <img src="https://images-ext-1.discordapp.net/external/SN_x2CND0hZz7Cpx9lj31DZ6HbhImG8_BlIrY4s73a4/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/1377288453821169664/ae0e6a71b945e4d34a6fe2f0a353be8b.png?format=webp&quality=lossless&width=930&height=930" alt="Dvlarxzed">
           <span class="friend-tip">Dvlarxzed</span>
-          <a class="friend" data-name="! JmMoon" href="https://discord.com/users/1395550208066195477" target="_blank">
+        </a>
+        <a class="friend" data-name="! JmMoon" href="https://discord.com/users/1395550208066195477" target="_blank">
           <img src="https://images-ext-1.discordapp.net/external/i6F64F9J1427ObqJcOlHhO3HZhoux1AYxajnGaME1QA/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/1395550208066195477/6efcc58fe001fc64ad04f1f449431911.png?format=webp&quality=lossless&width=320&height=320" alt="JmMoon">
           <span class="friend-tip">JmMoon</span>
-        </a>
         </a>
       </div>
     </div>
@@ -874,7 +888,7 @@
     </div>
   </div>
 
-<div class="foot reveal" style="transition-delay:.21s">
+  <div class="foot reveal" style="transition-delay:.21s">
     <span>Feito por Rato</span>
     <span id="last-updated"></span>
     <div>
@@ -882,10 +896,6 @@
         💬 Quer uma bio igual? Entre em contato
       </a>
     </div>
-  </div>
-</div>
-
-
   </div>
 </div>
 
@@ -1030,7 +1040,6 @@
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   }
   
-  // Função para atualizar o display do Spotify (sem o "Ouvindo há")
   function updateSpotifyDisplay(spotifyData, currentTime, totalDuration) {
     const nowPlayingContainer = document.getElementById('now-playing-container');
     if (!nowPlayingContainer) return;
