@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
   
-  <!-- Favicon com emoji de fogo -->
   <link rel="icon" type="image/png" href="https://cdn.discordapp.com/emojis/1515801969715839169.png">
   <link rel="shortcut icon" href="https://cdn.discordapp.com/emojis/1515801969715839169.png">
   
@@ -49,7 +48,7 @@
       position: relative;
     }
 
-    /* Partículas de fogo */
+    /* Partículas de fogo - CORRIGIDO */
     .fire-container {
       position: fixed;
       top: 0;
@@ -57,7 +56,7 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 9998;
+      z-index: 9997;
       overflow: hidden;
     }
     .fire-particle {
@@ -68,11 +67,10 @@
       background-position: center;
       opacity: 0.7;
       pointer-events: none;
-      animation: fall linear infinite;
-      filter: blur(1px);
+      animation: fallFire linear infinite;
     }
-    @keyframes fall {
-      0% { transform: translateY(-20px) rotate(0deg); opacity: 0.7; }
+    @keyframes fallFire {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 0.8; }
       100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
     }
 
@@ -80,9 +78,7 @@
       position: fixed; inset: 0; z-index: -2; overflow: hidden;
     }
     .video-bg video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      width: 100%; height: 100%; object-fit: cover;
       filter: brightness(0.2) saturate(0.4) contrast(1.3);
     }
     .video-bg::after {
@@ -158,8 +154,7 @@
       backdrop-filter: blur(20px);
       padding: 5px 13px 5px 10px;
       border-radius: 99px;
-      font-size: 11px;
-      font-weight: 500;
+      font-size: 11px; font-weight: 500;
       color: var(--b);
       letter-spacing: 0.5px;
       pointer-events: auto;
@@ -168,9 +163,7 @@
     .wrap {
       max-width: 440px; margin: 0 auto;
       padding: 72px 18px 80px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      display: flex; flex-direction: column; gap: 10px;
       position: relative;
       z-index: 1;
     }
@@ -193,8 +186,7 @@
       position: relative;
       width: 100%;
       margin-bottom: 48px;
-      overflow: hidden;
-      border-radius: 20px;
+      overflow: visible;
     }
     .profile-banner {
       width: 100%;
@@ -203,7 +195,8 @@
       border-radius: 20px;
       overflow: hidden;
       border: 1px solid var(--border-bright);
-      transition: transform 0.3s ease-out;
+      transition: transform 0.2s ease-out;
+      will-change: transform;
     }
     .profile-banner video {
       width: 100%;
@@ -211,14 +204,10 @@
       object-fit: cover;
       object-position: center 35%;
       display: block;
-      will-change: transform;
-      transform: translateZ(0);
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
     }
     .avatar-wrapper {
       position: absolute;
-      bottom: -40px;
+      bottom: -44px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 5;
@@ -229,14 +218,14 @@
       height: 88px;
       background: var(--bg);
       border-radius: 50%;
-      padding: 4px;
+      padding: 3px;
     }
     .avatar {
       width: 100%;
       height: 100%;
       border-radius: 50%;
       object-fit: cover;
-      object-position: center top;
+      object-position: center center;
       border: 2px solid var(--bg);
       filter: grayscale(0.2);
       transition: opacity 0.3s ease;
@@ -331,7 +320,6 @@
       vertical-align: middle;
     }
     
-    /* Likes e Deslikes */
     .reactions {
       display: flex;
       align-items: center;
@@ -756,7 +744,7 @@
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 99px; }
     
-    /* Loading */
+    /* Loading - CORRIGIDO */
     .loading-overlay {
       position: fixed;
       inset: 0;
@@ -765,7 +753,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: opacity 0.5s;
+      transition: opacity 0.5s ease;
+      opacity: 0;
+      visibility: hidden;
+    }
+    .loading-overlay.active {
+      opacity: 1;
+      visibility: visible;
     }
     .loading-spinner {
       width: 50px;
@@ -781,10 +775,6 @@
   </style>
 </head>
 <body>
-
-<div class="loading-overlay" id="loading">
-  <div class="loading-spinner"></div>
-</div>
 
 <div class="fire-container" id="fire-container"></div>
 <div class="grain"></div>
@@ -802,6 +792,10 @@
   <div class="gate-hint">Click</div>
 </div>
 
+<div class="loading-overlay" id="loading">
+  <div class="loading-spinner"></div>
+</div>
+
 <div class="topbar">
   <div class="views">
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -816,7 +810,7 @@
   <div class="reveal">
     <div class="profile">
       <div class="banner-container">
-        <div class="profile-banner" id="banner-video-container">
+        <div class="profile-banner" id="bannerVideoContainer">
           <video id="banner-video" autoplay loop muted playsinline preload="none" disablePictureInPicture>
             <source src="" type="video/mp4">
           </video>
@@ -1000,41 +994,36 @@
   const bgVideo = document.getElementById('bg-video');
   const bannerVideo = document.getElementById('banner-video');
   const loadingOverlay = document.getElementById('loading');
+  const fireContainer = document.getElementById('fire-container');
   
   let currentSpotifyData = null;
   let spotifyTimer = null;
   let currentTrackId = null;
   
-  // ========== PARALLAX ==========
-  const bannerContainer = document.querySelector('.banner-container');
-  const bannerVideoElem = document.querySelector('#banner-video');
-  const profileBanner = document.querySelector('.profile-banner');
+  // ========== PARALLAX NO BANNER ==========
+  const bannerContainer = document.querySelector('.profile-banner');
   
   // Mouse Parallax
   document.addEventListener('mousemove', (e) => {
-    if (!profileBanner) return;
-    const x = (e.clientX / window.innerWidth - 0.5) * 15;
-    const y = (e.clientY / window.innerHeight - 0.5) * 15;
-    profileBanner.style.transform = `scale(1.05) translate(${x}px, ${y}px)`;
+    if (!bannerContainer) return;
+    const x = (e.clientX / window.innerWidth - 0.5) * 10;
+    const y = (e.clientY / window.innerHeight - 0.5) * 10;
+    bannerContainer.style.transform = `translate(${x}px, ${y}px)`;
   });
   
-  // Giroscópio para celular
-  if (window.DeviceOrientationEvent) {
-    window.addEventListener('deviceorientation', (e) => {
-      if (!profileBanner) return;
-      const x = e.gamma || 0;
-      const y = e.beta || 0;
-      profileBanner.style.transform = `scale(1.05) translate(${x / 3}px, ${y / 3}px)`;
-    });
-  }
+  // Reset parallax quando mouse sai
+  document.addEventListener('mouseleave', () => {
+    if (bannerContainer) bannerContainer.style.transform = 'translate(0px, 0px)';
+  });
   
-  // ========== PARTÍCULAS ADAPTATIVAS ==========
-  const fireContainer = document.getElementById('fire-container');
+  // ========== PARTÍCULAS DE FOGO ADAPTATIVAS ==========
   const isMobile = window.innerWidth < 600;
   const particleSpeed = isMobile ? 2000 : 800;
-  const particleSize = isMobile ? 12 : 24;
+  const particleSize = isMobile ? 14 : 24;
+  let particleInterval = null;
   
   function createFireParticle() {
+    if (!fireContainer) return;
     const particle = document.createElement('div');
     particle.classList.add('fire-particle');
     particle.style.left = Math.random() * 100 + '%';
@@ -1054,16 +1043,29 @@
     }, isMobile ? 20000 : 15000);
   }
   
+  function startFireParticles() {
+    if (particleInterval) clearInterval(particleInterval);
+    particleInterval = setInterval(createFireParticle, particleSpeed);
+    // Criar algumas partículas iniciais
+    for (let i = 0; i < (isMobile ? 5 : 10); i++) {
+      setTimeout(createFireParticle, i * (particleSpeed / 3));
+    }
+  }
+  
   // ========== PRELOAD INTELIGENTE ==========
   function loadVideos() {
     // Vídeo de fundo
-    bgVideo.querySelector('source').src = 'https://files.catbox.moe/3xm2ia.mp4';
-    bgVideo.load();
-    bgVideo.play().catch(() => {});
+    if (bgVideo) {
+      const bgSource = bgVideo.querySelector('source');
+      if (bgSource) bgSource.src = 'https://files.catbox.moe/3xm2ia.mp4';
+      bgVideo.load();
+      bgVideo.play().catch(() => {});
+    }
     
     // Vídeo do banner
     if (bannerVideo) {
-      bannerVideo.querySelector('source').src = 'https://files.catbox.moe/9trkpw.mp4';
+      const bannerSource = bannerVideo.querySelector('source');
+      if (bannerSource) bannerSource.src = 'https://files.catbox.moe/9trkpw.mp4';
       bannerVideo.load();
       bannerVideo.play().catch(() => {});
     }
@@ -1180,7 +1182,9 @@
     if (!gate) return;
     
     // Mostrar loading
-    if (loadingOverlay) loadingOverlay.style.display = 'flex';
+    if (loadingOverlay) {
+      loadingOverlay.classList.add('active');
+    }
     
     // Carregar vídeos
     loadVideos();
@@ -1192,22 +1196,17 @@
       gate.style.pointerEvents = 'none';
       if (wrap) wrap.style.visibility = 'visible';
       
-      // Esconder loading após um pequeno delay
+      // Esconder loading
       setTimeout(() => {
         if (loadingOverlay) {
-          loadingOverlay.style.opacity = '0';
-          setTimeout(() => {
-            if (loadingOverlay) loadingOverlay.style.display = 'none';
-          }, 500);
+          loadingOverlay.classList.remove('active');
         }
-      }, 1000);
+      }, 1500);
       
       // Iniciar partículas de fogo
-      setInterval(createFireParticle, particleSpeed);
-      for (let i = 0; i < (isMobile ? 5 : 10); i++) {
-        setTimeout(createFireParticle, i * (particleSpeed / 3));
-      }
+      startFireParticles();
       
+      // Intersection Observer para revelar elementos
       const obs = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (e.isIntersecting) {
